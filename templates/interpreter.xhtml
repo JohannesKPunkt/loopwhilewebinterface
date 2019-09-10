@@ -1,0 +1,443 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Showcases a horizontal menu that hides at
+     small window widths, and which scrolls when revealed." />    <title>${title}</title>    
+    <link rel="stylesheet" href="purecss/pure-min.css" integrity="sha384-" crossorigin="anonymous" />
+    
+    <style type="text/css" media="screen">
+    .ace_editor {
+        position: relative !important;
+        border: 1px solid lightgray;
+        margin-left: 20px;
+        height: 300px;
+        width: 864px;
+        text-align: left;
+    }
+
+    .ace_editor.fullScreen {
+        height: auto;
+        width: auto;
+        border: 0;
+        margin: 0;
+        position: fixed !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
+
+    body.fullScreen {
+        overflow: hidden;
+        /*transform breaks position fixed*/
+        transform: none!important;
+    }
+
+    .scrollmargin {
+        height: 500px;
+        text-align: left;
+    }
+
+    .large-button {
+        color: lightblue;
+        cursor: pointer;
+        font: 30px arial;
+        padding: 20px;
+        text-align: center;
+        border: medium solid transparent;
+        display: inline-block;
+    }
+    .large-button:hover {
+        border: medium solid lightgray;
+        border-radius: 10px 10px 10px 10px;
+        box-shadow: 0 0 12px 0 lightblue;
+    }
+    body {
+        transform: translateZ(0);
+    }
+  </style>
+    
+</head>
+<body>
+<style>
+      .custom-menu-wrapper {
+          background-color: #808080;
+          margin-bottom: 2.5em;
+          white-space: nowrap;
+          position: relative;
+      }
+      
+      .custom-menu {
+          display: inline-block;
+          width: auto;
+          vertical-align: middle;
+          -webkit-font-smoothing: antialiased;
+      }
+      
+      .custom-menu .pure-menu-link,
+      .custom-menu .pure-menu-heading {
+          color: white;
+      }
+      
+      .custom-menu .pure-menu-link:hover,
+      .custom-menu .pure-menu-heading:hover {
+          background-color: transparent;
+      }
+      
+      .custom-menu-top {
+          position: relative;
+          padding-top: .5em;
+          padding-bottom: .5em;
+      }
+      
+      .custom-menu-brand {
+          display: block;
+          text-align: center;
+          position: relative;
+      }
+      
+      .custom-menu-toggle {
+          width: 44px;
+          height: 44px;
+          display: block;
+          position: absolute;
+          top: 3px;
+          right: 0;
+          display: none;
+      }
+      
+      .custom-menu-toggle .bar {
+          background-color: white;
+          display: block;
+          width: 20px;
+          height: 2px;
+          border-radius: 100px;
+          position: absolute;
+          top: 22px;
+          right: 12px;
+          -webkit-transition: all 0.5s;
+          -moz-transition: all 0.5s;
+          -ms-transition: all 0.5s;
+          transition: all 0.5s;
+      }
+      
+      .custom-menu-toggle .bar:first-child {
+          -webkit-transform: translateY(-6px);
+          -moz-transform: translateY(-6px);
+          -ms-transform: translateY(-6px);
+          transform: translateY(-6px);
+      }
+      
+      .custom-menu-toggle.x .bar {
+          -webkit-transform: rotate(45deg);
+          -moz-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+      }
+      
+      .custom-menu-toggle.x .bar:first-child {
+          -webkit-transform: rotate(-45deg);
+          -moz-transform: rotate(-45deg);
+          -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+      }
+      
+      .custom-menu-screen {
+          background-color: rgba(0, 0, 0, 0.5);
+          -webkit-transition: all 0.5s;
+          -moz-transition: all 0.5s;
+          -ms-transition: all 0.5s;
+          transition: all 0.5s;
+          height: 3em;
+          width: 70em;
+          position: absolute;
+          top: 0;
+          z-index: -1;
+      }
+      
+      .custom-menu-tucked .custom-menu-screen {
+          -webkit-transform: translateY(-44px);
+          -moz-transform: translateY(-44px);
+          -ms-transform: translateY(-44px);
+          transform: translateY(-44px);
+      }
+      
+      @media (max-width: 62em) {
+      
+          .custom-menu {
+              display: block;
+          }
+      
+          .custom-menu-toggle {
+              display: block;
+              display: none\9;
+          }
+      
+          .custom-menu-bottom {
+              position: absolute;
+              width: 100%;
+              border-top: 1px solid #eee;
+              background-color: #808080\9;
+              z-index: 100;
+          }
+      
+          .custom-menu-bottom .pure-menu-link {
+              opacity: 1;
+              -webkit-transform: translateX(0);
+              -moz-transform: translateX(0);
+              -ms-transform: translateX(0);
+              transform: translateX(0);
+              -webkit-transition: all 0.5s;
+              -moz-transition: all 0.5s;
+              -ms-transition: all 0.5s;
+              transition: all 0.5s;
+          }
+      
+          .custom-menu-bottom.custom-menu-tucked .pure-menu-link {
+              -webkit-transform: translateX(-140px);
+              -moz-transform: translateX(-140px);
+              -ms-transform: translateX(-140px);
+              transform: translateX(-140px);
+              opacity: 0;
+              opacity: 1\9;
+          }
+      
+          .pure-menu-horizontal.custom-menu-tucked {
+              z-index: -1;
+              top: 45px;
+              position: absolute;
+              overflow: hidden;
+          }
+      
+      }
+      </style>
+      <div class="custom-menu-wrapper">
+          <div class="pure-menu custom-menu custom-menu-top">
+              <img src="logo.png" />
+              <a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
+          </div>
+          <div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
+              <div class="custom-menu-screen"></div>
+              <ul class="pure-menu-list">
+                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">Home</a></li>
+                  <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+                  <li class="pure-menu-item"><a href="https://www8.cs.fau.de/imprint" class="pure-menu-link">Imprint</a></li>
+              </ul>
+          </div>
+      </div>
+      <script>
+      (function (window, document) {
+      document.getElementById('toggle').addEventListener('click', function (e) {
+          document.getElementById('tuckedMenu').classList.toggle('custom-menu-tucked');
+          document.getElementById('toggle').classList.toggle('x');
+      });
+      })(this, this.document);
+      </script>
+
+<div style="margin-left: 20px;">
+${text_before}
+</div>
+
+<pre id="editor">
+// Hier könnte Ihr Programm stehen
+in: i0
+out: o0
+
+o0 := 42 * i0;
+</pre>
+<!-- load ace -->
+<script src="ace-src/ace.js"></script>
+<!-- load ace themelist extension -->
+<script src="ace-src/ext-themelist.js"></script>
+<!-- load ace language_tools extension -->
+<script src="ace-src/ext-language_tools.js"></script>
+<script>
+//<![CDATA[
+var session_id = 0;
+
+var $ = document.getElementById.bind(document);
+var dom = require("ace/lib/dom");
+
+ace.config.set("enableBasicAutocompletion", true);
+
+//add command to all new editor instances
+require("ace/commands/default_commands").commands.push({
+    name: "Toggle Fullscreen",
+    bindKey: "F11",
+    exec: function(editor) {
+        var fullScreen = dom.toggleCssClass(document.body, "fullScreen")
+        dom.setCssClass(editor.container, "fullScreen", fullScreen)
+        editor.setAutoScrollEditorIntoView(!fullScreen)
+        editor.resize()
+    }
+});
+
+// create first editor
+var editor = ace.edit("editor");//, document.getElementById("editor_container"));
+editor.setTheme("ace/theme/twilight");
+editor.session.setMode("ace/mode/LoopWhile");
+editor.renderer.setScrollMargin(10, 10);
+editor.setOptions({
+    // "scrollPastEnd": 0.8,
+    autoScrollEditorIntoView: true
+});
+
+
+var count = 1;
+
+var themes = require("ace/ext/themelist").themes.map(function(t){return t.theme});
+
+window.add = add;
+window.scroll = scroll;
+
+function handle_run_button()
+{
+	button = document.getElementById("run_button");
+	if(button.firstChild.data == "run")
+	{
+		var program_code = editor.getValue();
+		//TODO
+		var data = new FormData();
+		data.append("program_code", program_code);
+		var request = new XMLHttpRequest();
+		request.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				// server is now running the program
+				var id = parseInt(this.responseText, 10);
+				if (isNaN(id))
+				{
+					alert("illegal response from server");
+					session_id = 0;
+				}
+				else
+				{
+					session_id = id;
+				}
+			}
+			else if (this.readyState == 4)
+			{
+				alert("connection error " + this.status);
+				alert(this.responseText); //TODO only for debug
+			}
+		};
+		request.timeout = 2000;
+		request.open("POST", "run", true);
+		request.send(data);
+		button.firstChild.data = "stop";
+		window.reload_terminal_agent = setTimeout(reload_terminal, 500);
+		window.await_termination_agent = setInterval(check_termination, 500);
+		
+	}
+	else
+	{
+		//TODO
+		
+		var data = new FormData();
+		data.append("session_id", session_id);
+		var requesta = new XMLHttpRequest();
+		requesta.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				if (this.responseText != "OK")
+				{
+					alert(this.responseText)
+				}
+			}
+			else if (this.readyState == 4)
+			{
+				alert("connection error " + this.status);
+			}
+		};
+		requesta.timeout = 2000;
+		requesta.open("POST", "stop", true);
+		requesta.send(data);
+		
+		session_id = 0;
+		clearTimeout(window.reload_terminal_agent);
+		button.firstChild.data = "run";
+	}
+}
+
+function check_termination()
+{
+	var data = new FormData();
+	data.append("session_id", session_id);
+	var requesta = new XMLHttpRequest();
+	requesta.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			if (this.responseText != "running")
+			{
+				clearInterval(window.await_termination_agent);
+				session_id = 0;
+				clearTimeout(window.reload_terminal_agent);
+				button.firstChild.data = "run";
+				if (this.responseText == "timeout")
+				{
+					alert("Timeout");
+				}
+			}
+		}
+		
+	};
+	requesta.timeout = 2000;
+	requesta.open("POST", "check_termination", true);
+	requesta.send(data);
+}
+
+function handle_debug_mode_button()
+{
+	button = document.getElementById("debug_mode_button");
+	if(button.firstChild.data == "enter debug mode")
+	{
+		//TODO
+		button.firstChild.data = "leave debug mode";
+	}
+	else
+	{
+		//TODO
+		button.firstChild.data = "enter debug mode";
+	}
+}
+//]]>
+</script>
+
+<div id="form_container" style="max-width: 864px;align: center;margin-left: 20px;margin-top: 10px;margin-bottom: 10px">
+	<form action="javascript:void(0);">
+		<button class="pure-button" onclick="handle_run_button()" id="run_button" style="width: 150px;">run</button>
+		<button class="pure-button" onclick="handle_debug_mode_button()" id="debug_mode_button">enter debug mode</button>
+	</form>
+</div>
+
+<div id="terminal_container" style="max-height: 150px;width: 864px;margin-left: 20px;"></div>
+
+<script type="text/javascript" src="jquery/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.terminal.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+$('#terminal_container').height($(document).height());
+terminal = $('#terminal_container').terminal('shell', {custom_prompt : "", hello_message : 'Click \'run\' to execute the program above.'});
+//terminal.terminal_command("test1", "test2"); //http://127.0.0.1:8000
+
+function reload_terminal()
+{
+	global_terminal_command("5", "5");
+}
+/*
+function clear_terminal()
+{
+	global_terminal_append("Hallo");
+}
+*/
+//]]>
+</script>
+
+
+</body>
+</html>
