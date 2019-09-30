@@ -117,8 +117,8 @@ oop.inherits(Mode, TextMode);
             return indent;
         }
         if (state == "start") {
-            var match = line.match(/^.*(then|do)\s*$/)
-                     || line.match(/(def|if).(.*)$/);
+            var match = line.match(/^.*(0|\s)(then|do)\s*$/)
+                     || line.match(/^\s*(def|if).(.*)$/);
             if (match) {
                 indent += tab;
             }
@@ -129,7 +129,7 @@ oop.inherits(Mode, TextMode);
 
     this.checkOutdent = function(state, line, input) {
         var complete_line = line + input;
-        if (complete_line.match(/^\s*(enddo|endif|enddef)$/)) {
+        if (complete_line.match(/^.*(enddo|endif|enddef)$/)) {
             return true;
         }
 
@@ -142,7 +142,7 @@ oop.inherits(Mode, TextMode);
         var prevLine = session.getLine(row - 1);
         var prevIndent = this.$getIndent(prevLine).length;
         var indent = this.$getIndent(line).length;
-        if (indent <= prevIndent) {
+        if (indent < prevIndent) {
             return;
         }
 
