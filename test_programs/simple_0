@@ -1,0 +1,17 @@
+setbreakpoint 6 simple.lw
+1 6 0# Breakpoint 0 set.
+setbreakpoint 8 simple.lw
+1 8 1# Breakpoint 1 set.
+setbreakpoint 9 simple.lw
+1 9 2# Breakpoint 2 set.
+run
+Please type in values for global input variables:
+i0: 2
+i1: 3
+0 6 0 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/simple.lw","line":6,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":2},{"VarType":"input","Ident":"i1","Val":3},{"VarType":"output","Ident":"o0","Val":0},{"VarType":"auxiliary","Ident":"tmp","Val":0}]}]# Breakpoint 0 reached.
+resume
+0 8 1 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/simple.lw","line":8,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":2},{"VarType":"input","Ident":"i1","Val":3},{"VarType":"output","Ident":"o0","Val":0},{"VarType":"auxiliary","Ident":"tmp","Val":6}]}]# Breakpoint 1 reached.
+stepinto
+0 9 2 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/simple.lw","line":9,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":2},{"VarType":"input","Ident":"i1","Val":3},{"VarType":"output","Ident":"o0","Val":0},{"VarType":"auxiliary","Ident":"tmp","Val":8}]}]# Breakpoint 2 reached.
+resume
+o0: 96

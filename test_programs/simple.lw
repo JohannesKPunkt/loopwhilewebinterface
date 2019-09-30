@@ -1,0 +1,12 @@
+in: i0, i1;
+out: o0;
+aux: tmp;
+
+
+tmp := i0 + i1;
+tmp := tmp + 1;
+tmp := tmp + 2;
+tmp := tmp * 2;
+tmp := tmp * 3;
+
+o0 := tmp * 2;

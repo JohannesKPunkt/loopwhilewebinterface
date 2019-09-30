@@ -1,0 +1,21 @@
+johannes@johannes-ThinkPad-T420:~/Dokumente/Uni/LoopWhile$ ./lwre -d loop.lw 
+setbreakpoint 2 loop.lw
+No Statement in line 2.
+setbreakpoint 3 loop.lw
+No Statement in line 3.
+setbreakpoint 4 loop.lw
+1 4 0# Breakpoint 0 set.
+setbreakpoint 5 loop.lw
+1 5 1# Breakpoint 1 set.
+setbreakpoint 6 loop.lw
+1 6 2# Breakpoint 2 set.
+setbreakpoint 7 loop.lw
+No Statement in line 7.
+setbreakpoint 42 loop.lw
+No Statement in line 42.
+run
+Please type in values for global input variables:
+i0: 1
+0 4 0 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/loop.lw","line":4,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":1},{"VarType":"output","Ident":"o0","Val":0}]}]# Breakpoint 0 reached.
+resume
+0 5 1 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/loop.lw","line":5,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":1},{"VarType":"output","Ident":"o0","Val":1}]}]# Breakpoint 1 reached.

@@ -1,0 +1,19 @@
+johannes@johannes-ThinkPad-T420:~/Dokumente/Uni/LoopWhile$ ./lwre -d simple.lw
+setbreakpoint 7 simple.lw
+1 7 0# Breakpoint 0 set.
+setbreakpoint 10 simple.lw
+1 10 1# Breakpoint 1 set.
+run
+Please type in values for global input variables:
+i0: 5
+i1: 6
+0 7 0 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/simple.lw","line":7,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":5},{"VarType":"input","Ident":"i1","Val":6},{"VarType":"output","Ident":"o0","Val":0},{"VarType":"auxiliary","Ident":"tmp","Val":11}]}]# Breakpoint 0 reached.
+removebreakpoint 10 simple.lw
+Unknown command.
+clearbreakpoint 10 simple.lw
+setbreakpoint 9 simple.lw
+1 9 1# Breakpoint 1 set.
+resume
+0 9 1 [{"file":"/home/johannes/Dokumente/Uni/LoopWhile/simple.lw","line":9,"macro":"root","bindings":[{"VarType":"input","Ident":"i0","Val":5},{"VarType":"input","Ident":"i1","Val":6},{"VarType":"output","Ident":"o0","Val":0},{"VarType":"auxiliary","Ident":"tmp","Val":14}]}]# Breakpoint 1 reached.
+resume
+o0: 168

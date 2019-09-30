@@ -1,0 +1,7 @@
+in: i0;
+out: o0;
+
+o0 := i0;
+while o0 != 0 do
+	o0 := o0 - 1;
+enddo;

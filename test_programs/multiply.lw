@@ -1,0 +1,13 @@
+def multiply
+  in: x, y;
+  out: z;
+  
+  z := 0;
+  loop x do
+    z := z + y;
+  enddo
+enddef;
+
+in: i0, i1;
+out: o0;
+o0 := multiply(i0, i1);
