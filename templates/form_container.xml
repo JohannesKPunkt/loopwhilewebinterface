@@ -1,0 +1,6 @@
+<div id="form_container" style="max-width: 864px;align: center;margin-left: 20px;margin-top: 10px;margin-bottom: 10px">
+	<form action="javascript:void(0);">
+		<button class="pure-button" onclick="handle_run_button()" id="run_button" style="width: 150px;">run</button>
+		<button class="pure-button" onclick="handle_debug_mode_button()" id="debug_mode_button">${debug_mode_button}</button>
+	</form>
+</div>

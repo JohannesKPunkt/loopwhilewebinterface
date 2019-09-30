@@ -4,9 +4,11 @@
 #  
 #
 
-from ../IOTools import read_timeout
+import sys, unittest
+import tests_common
+from IOTools import read_timeout
 
-class SessionManaerTests(unittest.TestCase):
+class IOToolsTests(unittest.TestCase):
     def test_read(self):
         pass
 

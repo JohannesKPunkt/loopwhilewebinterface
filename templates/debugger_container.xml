@@ -1,0 +1,28 @@
+<div>
+    <script>
+        function setBullet(id)
+        {
+             var elem = document.getElementById(id);
+             if (elem.getAttribute("src") == "/img/transparentdot.png")
+             {
+                 elem.setAttribute("src", "/img/reddot.png");
+             }
+             else
+             {
+                 elem.setAttribute("src", "/img/transparentdot.png");
+             }
+        }
+        active_line = "";
+    </script>
+    <style>
+    .debuggerCodeView { background-color:#151515;border-collapse:collapse;color: #F8FBEF;font-size:12px;width:100%;}
+    .debuggerCodeView td, .myOtherTable th { padding:0px;border:0; }
+    .debuggerCodeViewLineNo { background-color:#2E2E2E; text-align: right; width: 40px;}
+    .debuggerCodeViewSide { background-color:#2E2E2E; padding: 15px; width: 20px;}
+    .debuggerCodeViewLine { }
+    .debuggerCodeViewLineActive { background-color: #787878;}
+    </style>
+    <div style="background-color:#151515; color:#F8FBEF; opacity: 45%; margin-left: 20px; width: 100%; max-height: 300px; overflow:auto;">
+        ${debugger_view_content}
+    </div>
+</div>
