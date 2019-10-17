@@ -10,7 +10,24 @@ terminal = $('#terminal_container').terminal('shell', {custom_prompt : "", hello
 
 function reload_terminal()
 {
-	global_terminal_command("5", "5");
+	//global_terminal_command("5", "5");
+    var data = new FormData();
+	data.append("session_id", session_id);
+	data.append("input", "");
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+            if (this.responseText != "")
+            {
+                global_terminal_append(this.responseText);
+            }
+		}
+	};
+	request.timeout = 2000;
+	request.open("POST", "shell", true);
+	request.send(data);
 }
 /*
 function clear_terminal()

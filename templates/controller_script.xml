@@ -106,7 +106,6 @@ function handle_debug_mode_button()
 	{
 		//TODO
 		button.firstChild.data = "leave debug mode";
-        //window.open("debugger", "_self");
         var form = document.createElement("form");
         form.target = "_self";
         form.method = "POST";
@@ -122,8 +121,20 @@ function handle_debug_mode_button()
 	}
 	else
 	{
-		//TODO
+		//TODO send stop command to terminate debug session!
 		button.firstChild.data = "enter debug mode";
+        var form = document.createElement("form");
+        form.target = "_self";
+        form.method = "POST";
+        form.action = "interpreter";
+        var input = document.createElement("input");
+        input.type = "hidden";//test text
+        input.name = "program_code";
+        input.value = "foo";//TODO
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
 	}
 }
 
@@ -164,32 +175,15 @@ function breakpoint_action(id)
      }
 }
 
-
-function handle_continue_button()
+function check_debugger_state()
 {
-    handle_action("continue");
-}
-
-function handle_step_over_button()
-{
-    handle_action("stepover");
-}
-
-function handle_step_into_button()
-{
-    handle_action("stepinto");
-}
-
-function handle_step_out_button()
-{
-    handle_action("stepout");
-}
-
-function handle_action(action)
-{
+    check_termination();
+    reload_terminal();
+    
+    //check if debugger stopped
     var data = new FormData();
 	data.append("session_id", session_id);
-	data.append("action", action);
+	data.append("action", "pollstate");
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function()
 	{
@@ -217,6 +211,46 @@ function handle_action(action)
             }
 		}
 		
+	};
+	request.timeout = 2000;
+	request.open("POST", "debugger_poll_state", true);
+	request.send(data);
+}
+
+function handle_continue_button()
+{
+    if (debugger_state == 0)
+    {
+        debugger_state = 1;
+		window.await_termination_agent = setInterval(check_debugger_state, 200);
+    }
+    handle_action("continue");
+}
+
+function handle_step_over_button()
+{
+    handle_action("stepover");
+}
+
+function handle_step_into_button()
+{
+    handle_action("stepinto");
+}
+
+function handle_step_out_button()
+{
+    handle_action("stepout");
+}
+
+function handle_action(action)
+{
+    var data = new FormData();
+	data.append("session_id", session_id);
+	data.append("action", action);
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function()
+	{
+        //TODO: do some error handling here?
 	};
 	request.timeout = 2000;
 	request.open("POST", "debugger_action", true);

@@ -46,7 +46,7 @@ class DebuggerView(dict):
             "terminal.xml"]
         self["debug_mode_button"] = "leave debug mode"
         try:
-            self["debugger_view_content"] = Markup(DebuggerView._get_source_code_view(code, 7))
+            self["debugger_view_content"] = Markup(DebuggerView._get_source_code_view(code))
         except LexerError as e:
             escaped = code[max(0,e.pos-10): min(len(code), e.pos+10)].replace("\n", " ")
             escaped = escaped.replace("\r", " ").replace("\t", " ")

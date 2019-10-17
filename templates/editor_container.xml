@@ -1,11 +1,5 @@
 <div id="editor_container">
-    <pre id="editor">
-    // Hier könnte Ihr Programm stehen
-    in: i0
-    out: o0
-
-    o0 := 42 * i0;
-    </pre>
+    <pre id="editor">$program_code</pre>
     <!-- load ace -->
     <script src="ace/ace.js"></script>
     <!-- load ace themelist extension -->

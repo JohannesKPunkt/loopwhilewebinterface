@@ -115,6 +115,12 @@
 				terminal_output.text('');
 			}
 			terminal_container[0].clear = terminal_clear; //TODO bad [0] again!
+            
+            var own_terminal_append = function(content)
+			{
+				terminal_output.append(content);
+			}
+            window.own_terminal_append = own_terminal_append;
 			
 			var terminal_command = function(e, first)
 			{

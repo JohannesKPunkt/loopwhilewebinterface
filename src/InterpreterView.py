@@ -8,8 +8,21 @@
 
 from genshi.core import Markup
 
+_DEFAULT_PROGRAM_CODE = \
+"""// Hier könnte Ihr Programm stehen
+in: i0
+out: o0
+
+o0 := 42 * i0;
+"""
+
 class InterpreterView(dict):
-    def __init__(self):
+    def __init__(self, program_code):
+        if program_code is not None:
+            self["program_code"] = program_code
+        else:
+            self["program_code"] = _DEFAULT_PROGRAM_CODE
+
         self["title"] = "Loop/While interactive interpreter"
         self["text_before"] = Markup("<h1>LoopWhile interactive interpreter</h1>")
         self["includes_head"] = ["ace_style.xml"]

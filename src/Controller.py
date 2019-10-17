@@ -123,11 +123,27 @@ class Controller(TGController):
             logger.error("remove_breakpoint(): Exception: " + traceback.format_exc())
 
     @expose(content_type="text")
+    def debugger_poll_state(self, **kw):
+        try:
+            session_id = kw[SESSION_ID]
+            logger.debug("debugger_poll_state() called, session_id=" + 
+                         str(session_id))
+            session = self._sess_man.get_session(session_id)
+            state = session.poll_state()
+            if state is DebuggerState.DIED:
+                return "DIED"
+            else:
+                return "line" + str(session.last_stacktrace()[0]["line"])
+        except:
+            logger.error("debugger_poll_state(): Exception:" + traceback.format_exc())
+            return "FAIL"
+
+    @expose(content_type="text")
     def debugger_action(self, **kw):
         try:
             session_id = kw[SESSION_ID]
             action = kw[ACTION]
-            logger.debug("debugger_action() called, sessio_id=" + 
+            logger.debug("debugger_action() called, session_id=" + 
                          str(session_id) + ", action=" + str(action))
             session = self._sess_man.get_session(session_id)
             if action == "continue":
@@ -146,13 +162,7 @@ class Controller(TGController):
                 session.step_over()
             else:
                 return "FAIL"
-            while session.poll_state() is DebuggerState.RUNNING:
-                pass
-            state = session.poll_state()
-            if state is DebuggerState.DIED:
-                return "DIED"
-            else:
-                return "line" + str(session.last_stacktrace()[0]["line"])
+            return "OK"
         except:
             logger.error("debugger_action(): Exception:" + traceback.format_exc())
             return "FAIL"
@@ -213,5 +223,9 @@ enddo
 
     # /interpreter is the main site of the interpreter mode
     @expose('templates/interpreter.xhtml', content_type="text/html")
-    def interpreter(self):
-        return InterpreterView()
+    def interpreter(self, **kw):
+        try:
+            program_code = kw[PROGRAM_CODE]
+        except:
+            program_code = None
+        return InterpreterView(program_code)
