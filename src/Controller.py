@@ -92,7 +92,7 @@ class Controller(TGController):
             session = self._sess_man.get_session(session_id)
             return session.get_status()
         except KeyError as e:
-            logger.debug("check_termination(): KeyError:" + str(e))
+            logger.info("check_termination(): KeyError (invalid session id):" + str(e))
             return "timeout"
         except Exception as e:
             logger.error("check_termination(): Exception:" + str(e))
@@ -119,6 +119,8 @@ class Controller(TGController):
             logger.debug("remove_breakpoint() called, session_id=" + str(session_id) + ", line=" + str(line_no))
             session = self._sess_man.get_session(session_id)
             session.remove_breakpoint(int(line_no))
+        except KeyError as e:
+            logger.info("remove_breakpoint(): KeyError (invalid session id):" + str(e))
         except Exception as e:
             logger.error("remove_breakpoint(): Exception: " + traceback.format_exc())
 
@@ -134,9 +136,11 @@ class Controller(TGController):
                 return "DIED"
             else:
                 return "line" + str(session.last_stacktrace()[0]["line"])
+        except KeyError as e:
+            logger.info("debugger_poll_state(): KeyError (invalid session id):" + str(e))
         except:
             logger.error("debugger_poll_state(): Exception:" + traceback.format_exc())
-            return "FAIL"
+        return "FAIL"
 
     @expose(content_type="text")
     def debugger_action(self, **kw):
