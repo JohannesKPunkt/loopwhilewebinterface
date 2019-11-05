@@ -43,7 +43,8 @@ class DebuggerView(dict):
             "debugger_container.xml",
             "controller_script.xml",
             "form_container.xml",
-            "terminal.xml"]
+            "terminal.xml",
+            "debugger_varview.xml"]
         self["debug_mode_button"] = "leave debug mode"
         try:
             self["debugger_view_content"] = Markup(DebuggerView._get_source_code_view(code))

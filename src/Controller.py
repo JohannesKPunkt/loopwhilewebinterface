@@ -135,7 +135,10 @@ class Controller(TGController):
             if state is DebuggerState.DIED:
                 return "DIED"
             else:
-                return "line" + str(session.last_stacktrace()[0]["line"])
+                #return "line" + str(session.last_stacktrace()[0]["line"])
+                st = str(session.pop_last_stacktrace()).replace("\'", "\"")
+                logger.debug(st)
+                return st
         except KeyError as e:
             logger.info("debugger_poll_state(): KeyError (invalid session id):" + str(e))
         except:

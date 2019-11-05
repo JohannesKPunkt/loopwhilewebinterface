@@ -169,6 +169,13 @@ class Debugger(Session):
         self._process_telegrams()
         return self._last_stacktrace
 
+    # returns last received stacktrace and resets it to None
+    def pop_last_stacktrace(self):
+        self._process_telegrams()
+        st = self._last_stacktrace
+        self._last_stacktrace = None
+        return st
+
     # Fails with an DebuggerErrorMessage Exception, if line_no is not valid
     def set_breakpoint(self, line_no):
         self._send_cmd("setbreakpoint " +  str(line_no) + " " + self._input_file_name)

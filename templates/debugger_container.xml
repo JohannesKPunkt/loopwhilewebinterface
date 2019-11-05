@@ -23,7 +23,19 @@
     .debuggerCodeViewLine { }
     .debuggerCodeViewLineActive { background-color: #787878;}
     </style>
-    <div style="background-color:#151515; color:#F8FBEF; opacity: 45%; margin-left: 20px; width: 100%; max-height: 300px; overflow:auto;">
+    <div style="background-color:#151515; color:#F8FBEF; margin-left: 20px; width: 100%; max-height: 300px; overflow:auto;">
         ${debugger_view_content}
     </div>
+
+    <!-- style classes for the tabs below -->
+    <style>
+    .tabframe {
+        display: none;
+    }
+    .activetabframe {
+    }
+    </style>
+    <script>
+        current_tab = "terminal_container";
+    </script>
 </div>

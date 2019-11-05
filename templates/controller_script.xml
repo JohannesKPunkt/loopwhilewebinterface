@@ -2,7 +2,7 @@
 //<![CDATA[
 function handle_run_button()
 {
-	button = document.getElementById("run_button");
+	var button = document.getElementById("run_button");
 	if(button.firstChild.data == "run")
 	{
 		var program_code = editor.getValue();
@@ -73,6 +73,7 @@ function handle_run_button()
 
 function check_termination()
 {
+    button = document.getElementById("run_button");
 	var data = new FormData();
 	data.append("session_id", session_id);
 	var requesta = new XMLHttpRequest();
@@ -82,10 +83,13 @@ function check_termination()
 		{
 			if (this.responseText != "running")
 			{
-				clearInterval(window.await_termination_agent);
+                clearInterval(window.await_termination_agent);
+                clearTimeout(window.reload_terminal_agent);
 				session_id = 0;
-				clearTimeout(window.reload_terminal_agent);
-				button.firstChild.data = "run";
+                if(debugger_state == 0)
+                {
+                    button.firstChild.data = "run";
+                }
 				if (this.responseText == "timeout")
 				{
 					alert("Timeout");
@@ -197,17 +201,62 @@ function check_debugger_state()
                     elem.setAttribute("class", "debuggerCodeViewLine");
                     active_line = ""
                 }
+                
+                if(current_tab != "terminal_container")
+                {
+                    switch_tab("terminal_container");
+                }
             }
-            else
+            else if(this.responseText != "None")
             {
                 if(active_line != "")
                 {
                     var elem = document.getElementById(active_line);
                     elem.setAttribute("class", "debuggerCodeViewLine");
                 }
-                var elem = document.getElementById(this.responseText);
+                var strace = JSON.parse(this.responseText);
+                var line = strace[0]["line"];
+                var elem = document.getElementById("line" + line);
                 elem.setAttribute("class", "debuggerCodeViewLineActive");
-                active_line = this.responseText
+                active_line = "line" + line;
+                
+                // remove old table
+                var table_node = document.getElementById("debugger_varview");
+                table_node.remove();
+                // create new table node
+                var varview_cont = document.getElementById("debugger_varview_container");
+                table_node = document.createElement("table");
+                table_node.setAttribute("id", "debugger_varview");
+                varview_cont.appendChild(table_node);
+                for(var frame_id in strace)
+                {
+                    var frame = strace[frame_id];
+                    var tr = document.createElement("tr");
+                    var td = document.createElement("td");
+                    tr.appendChild(td);
+                    var macro_b = document.createElement("b");
+                    macro_b.appendChild(document.createTextNode("macro"));
+                    td.appendChild(macro_b);
+                    var text = document.createTextNode(" " + frame["macro"]);
+                    td.appendChild(text);
+                    
+                    table_node.appendChild(tr);
+                    for(var binding_id in frame["bindings"])
+                    {
+                        var binding = frame["bindings"][binding_id];
+                        var tr = document.createElement("tr");
+                        var td = document.createElement("td");
+                        tr.appendChild(td);
+                        var text = document.createTextNode("\u00A0\u00A0" + binding["VarType"] + " " + binding["Ident"] + ": " + binding["Val"]);
+                        td.appendChild(text);
+                        table_node.appendChild(tr);
+                    }
+                }
+                
+                if(current_tab != "debugger_varview_container")
+                {
+                    switch_tab("debugger_varview_container");
+                }
             }
 		}
 		
@@ -215,6 +264,15 @@ function check_debugger_state()
 	request.timeout = 2000;
 	request.open("POST", "debugger_poll_state", true);
 	request.send(data);
+}
+
+function switch_tab(tabname)
+{
+    var oldtab = document.getElementById(current_tab);
+    current_tab = tabname;
+    var newtab = document.getElementById(current_tab);
+    oldtab.setAttribute("class", "tabframe");
+    newtab.setAttribute("class", "activetabframe");
 }
 
 function handle_continue_button()
