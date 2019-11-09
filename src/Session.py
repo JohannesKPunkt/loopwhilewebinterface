@@ -45,6 +45,14 @@ class Session:
     def poll_user_output(self):
         return read_timeout(self._proc.stdout, timeout=0.15)
 
+    def get_program_code(self):
+        input_file_path = self._sess_man.get_input_filename(self._sess_id)
+        try:
+            with open(input_file_path, "r") as input_file:
+                return input_file.read()
+        except FileNotFoundError as e:
+            raise RuntimeError("Input file for session_id " + str(self._sess_id) + " not found: " + str(e))
+
 
     # creates a instance of the interpreter process and returns the 
     # corresponding Popen object

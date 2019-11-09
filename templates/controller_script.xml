@@ -130,11 +130,13 @@ function handle_debug_mode_button()
         var form = document.createElement("form");
         form.target = "_self";
         form.method = "POST";
-        form.action = "interpreter";
+        form.action = "debugger_leave";
         var input = document.createElement("input");
         input.type = "hidden";//test text
-        input.name = "program_code";
-        input.value = "foo";//TODO
+        //input.name = "program_code";
+        //input.value = "foo";//TODO
+        input.name = "session_id";
+        input.value = session_id;
         
         form.appendChild(input);
         document.body.appendChild(form);

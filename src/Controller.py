@@ -174,6 +174,26 @@ class Controller(TGController):
             logger.error("debugger_action(): Exception:" + traceback.format_exc())
             return "FAIL"
 
+    # /debugger_leave switches back from debugger mode to interpreter mode
+    @expose('templates/interpreter.xhtml', content_type="text/html")
+    def debugger_leave(self, **kw):
+        try:
+            session_id = kw[SESSION_ID]
+            logger.debug("debugger_leave() called, session_id=" + 
+                         str(session_id))
+            session = self._sess_man.get_session(session_id)
+            # get program code of debugger session
+            program_code = session.get_program_code()
+
+            # kill debugger session
+            # TODO!
+
+            # create interpreter view showing the program code
+            return InterpreterView(program_code)
+        except:
+            logger.error("debugger_action(): Exception:" + traceback.format_exc())
+            #TODO: error page!
+            return "FAIL"
 
     # /debugger is the main side of the debugger mode
     #@expose()#(content_type="text/html")
@@ -185,48 +205,6 @@ class Controller(TGController):
         logger.debug("debugger(): new session_id=" + str(session.get_id()))
         return DebuggerView(program_code, session.get_id())
 
-    # TO BE REMOVED
-    # /debugger is the main side of the debugger mode
-    #@expose()#(content_type="text/html")
-    @expose('templates/interpreter.xhtml', content_type="text/html")
-    def debugger_view_test(self, **kw):
-        return DebuggerView("""// Hier könnte Ihr Programm stehen
-in: i0
-out: o0
-
-o0 := 42 * i0;
-+ - * div   == 
-
-34324324324324324324
-wevfewcfe
-
-while foobar do
-    blabla;--
-\teingerueckt mit tabs ;)
-enddo
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-""", 7)
 
     # /interpreter is the main site of the interpreter mode
     @expose('templates/interpreter.xhtml', content_type="text/html")
