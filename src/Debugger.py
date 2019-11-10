@@ -9,6 +9,7 @@ import json
 from enum import Enum
 import threading
 import Logging
+import socket
 
 from external_libs.lexer import Lexer
 from IOTools import read_timeout, LineBuffer, ConnectionClosed
@@ -51,6 +52,7 @@ class DebuggerState(Enum):
 
 _socket_manager = SocketManager(10000, 20000)
 DEBUGGER_TIMEOUT = 5*60
+DEBUGGER_ACCEPT_TIMEOUT = 0.75
 logger = Logging.get_logger(__name__)
 
 
@@ -68,12 +70,18 @@ class Debugger(Session):
 
         # socket to listen for debugger process
         self._socket = _socket_manager.create_socket()
+        self._socket.settimeout(DEBUGGER_ACCEPT_TIMEOUT)
 
         # debugger process self._proc
         self._create_process(code, True, self._socket.get_port_no())
 
         # connection to the debugger process
-        self._conn, _ = self._socket.accept()
+        try:
+            self._conn, _ = self._socket.accept()
+        except socket.timeout:
+            # timeout happens normally in case of syntax errors, where
+            # the interpreter process terminates immediately
+            return
 
         # source file containing the users code
         self._input_file_name = self._sess_man.get_input_filename(sess_id)
