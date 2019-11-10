@@ -85,6 +85,7 @@ function handle_run_button()
 		
 		session_id = 0;
 		clearTimeout(window.reload_terminal_agent);
+		clearTimeout(window.await_termination_agent);
 		switch_state("stopped");
 	}
 }
