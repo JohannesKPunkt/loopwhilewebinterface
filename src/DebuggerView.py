@@ -16,7 +16,8 @@ logger = Logging.get_logger(__name__)
 
 # Lexer rules that are used to provide basic syntax highlighting
 _lexer_rules = [
-    ('def|enddef|loop|while|do|enddo|if|then|else|in|out|aux', 'KEYWORD'),
+    ('def|enddef|LOOP|WHILE|do|enddo|if|then|else|in|out|aux', 'KEYWORD'),
+    ('#',                                                      'HASHTAG'),
     ('\d+',                                                    'NUMBER'),
     ('[a-zA-Z_](\w|\d)*',                                      'IDENTIFIER'),
     ('\+|\-|\*|div|\%|==|<|<=|>|>=',                           'OPERATOR'),
@@ -100,6 +101,8 @@ class DebuggerView(dict):
                 output += "<font color=\"#F8FBEF\" style=\"opacity:.8\">" + token.val + "</font>"
             elif token.type == 'SPACE':
                 output += "&nbsp;"
+            elif token.type == 'HASHTAG':
+                output += "#"
             elif token.type == 'TAB':
                 output += "&nbsp;&nbsp;&nbsp;&nbsp;"
             elif token.type == 'KEYWORD' or token.type == 'BUILTIN':
