@@ -13,7 +13,6 @@
              }
         }
         active_line = "";
-        debugger_state = 0;//TODO: use enum?
     </script>
     <style>
     .debuggerCodeView { background-color:#151515;border-collapse:collapse;color: #F8FBEF;font-size:12px;width:100%;}

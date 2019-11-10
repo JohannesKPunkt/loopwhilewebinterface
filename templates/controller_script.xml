@@ -1,9 +1,27 @@
 <script type="text/javascript">
 //<![CDATA[
+
+current_mode = "${current_mode}"; //possible values: "interpreter", "debugger"
+current_state = "stopped"; //possible values: "stopped", "running"
+session_id = ${session_id};
+
+function switch_state(new_state)
+{
+    current_state = new_state;
+    var icon = document.getElementById("run_button_icon");
+    if(new_state == "running")
+    {
+        icon.setAttribute("src", "img/icons/baseline_stop_black_24dp.png");
+    }
+    else
+    {
+        icon.setAttribute("src", "img/icons/baseline_play_arrow_black_24dp.png");
+    }
+}
+
 function handle_run_button()
 {
-	var button = document.getElementById("run_button");
-	if(button.firstChild.data == "run")
+	if(current_state == "stopped")
 	{
 		var program_code = editor.getValue();
 		//TODO
@@ -35,7 +53,7 @@ function handle_run_button()
 		request.timeout = 2000;
 		request.open("POST", "run", true);
 		request.send(data);
-		button.firstChild.data = "stop";
+        switch_state("running")
 		window.reload_terminal_agent = setTimeout(reload_terminal, 500);
 		window.await_termination_agent = setInterval(check_termination, 500);
 		
@@ -67,7 +85,7 @@ function handle_run_button()
 		
 		session_id = 0;
 		clearTimeout(window.reload_terminal_agent);
-		button.firstChild.data = "run";
+		switch_state("stopped");
 	}
 }
 
@@ -86,9 +104,9 @@ function check_termination()
                 clearInterval(window.await_termination_agent);
                 clearTimeout(window.reload_terminal_agent);
 				session_id = 0;
-                if(debugger_state == 0)
+                if(current_mode == "interpreter")
                 {
-                    button.firstChild.data = "run";
+                    switch_state("stopped");
                 }
 				if (this.responseText == "timeout")
 				{
@@ -103,45 +121,38 @@ function check_termination()
 	requesta.send(data);
 }
 
-function handle_debug_mode_button()
+function handle_debug_button()
 {
-	button = document.getElementById("debug_mode_button");
-	if(button.firstChild.data == "enter debug mode")
-	{
-		//TODO
-		button.firstChild.data = "leave debug mode";
-        var form = document.createElement("form");
-        form.target = "_self";
-        form.method = "POST";
-        form.action = "debugger";
-        var input = document.createElement("input");
-        input.type = "hidden";//test text
-        input.name = "program_code";
-        input.value = editor.getValue();
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-	}
-	else
-	{
-		//TODO send stop command to terminate debug session!
-		button.firstChild.data = "enter debug mode";
-        var form = document.createElement("form");
-        form.target = "_self";
-        form.method = "POST";
-        form.action = "debugger_leave";
-        var input = document.createElement("input");
-        input.type = "hidden";//test text
-        //input.name = "program_code";
-        //input.value = "foo";//TODO
-        input.name = "session_id";
-        input.value = session_id;
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-	}
+    var form = document.createElement("form");
+    form.target = "_self";
+    form.method = "POST";
+    form.action = "debugger";
+    var input = document.createElement("input");
+    input.type = "hidden";//test text
+    input.name = "program_code";
+    input.value = editor.getValue();
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function handle_debug_close_button()
+{
+    var form = document.createElement("form");
+    form.target = "_self";
+    form.method = "POST";
+    form.action = "debugger_leave";
+    var input = document.createElement("input");
+    input.type = "hidden";//test text
+    //input.name = "program_code";
+    //input.value = "foo";//TODO
+    input.name = "session_id";
+    input.value = session_id;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function breakpoint_action(id)
@@ -221,6 +232,7 @@ function check_debugger_state()
                 var elem = document.getElementById("line" + line);
                 elem.setAttribute("class", "debuggerCodeViewLineActive");
                 active_line = "line" + line;
+                elem.scrollIntoView();
                 
                 // remove old table
                 var table_node = document.getElementById("debugger_varview");
@@ -279,9 +291,9 @@ function switch_tab(tabname)
 
 function handle_continue_button()
 {
-    if (debugger_state == 0)
+    if (current_state == "stopped")
     {
-        debugger_state = 1;
+        current_state = "running";
 		window.await_termination_agent = setInterval(check_debugger_state, 200);
     }
     handle_action("continue");

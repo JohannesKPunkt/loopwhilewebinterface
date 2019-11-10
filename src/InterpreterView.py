@@ -28,9 +28,11 @@ class InterpreterView(dict):
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
             "interpreter_text.html",
+            "form_container.xml",
             "editor_container.xml",
             "controller_script.xml",
-            "form_container.xml",
             "terminal.xml",
         ]
-        self["debug_mode_button"] = "enter debug mode"
+        self["current_mode"] = "interpreter"
+        # starts with inactive session
+        self["session_id"] = 0;

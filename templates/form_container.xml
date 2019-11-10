@@ -1,6 +1,39 @@
-<div id="form_container" style="max-width: 864px;align: center;margin-left: 20px;margin-top: 10px;margin-bottom: 10px">
-	<form action="javascript:void(0);">
-		<button class="pure-button" onclick="handle_run_button()" id="run_button" style="width: 150px;">run</button>
-		<button class="pure-button" onclick="handle_debug_mode_button()" id="debug_mode_button">${debug_mode_button}</button>
-	</form>
+<div id="form_container" xmlns:py="http://genshi.edgewall.org/">
+    <style>
+        td.debuggerButton
+        {
+            padding-right: 5px;
+        }
+        div.debuggerButton
+        {
+        }
+        div:hover.debuggerButton
+        {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+    <div style="margin-left: 20px; background-color: #d9d9d9; width: 100%;">
+        <table style="margin-left: 60px;" py:choose="current_mode">
+            <tr py:when="'debugger'">
+                <td class="debuggerButton"><div title="continue" class="debuggerButton"><img src="img/icons/baseline_skip_next_black_24dp.png" onclick="handle_continue_button();"/></div></td>
+                <td class="debuggerButton"><img src="img/thinruler.png"/></td>
+                <td class="debuggerButton"><div title="step over" class="debuggerButton"><img src="img/icons/baseline_call_missed_black_24dp.png" style="transform:rotate(180deg);" onclick="handle_step_over_button();"/></div></td>
+                <td class="debuggerButton"><div title="step into" class="debuggerButton"><img src="img/icons/baseline_vertical_align_bottom_black_24dp.png" onclick="handle_step_into_button();"/></div></td>
+                <td class="debuggerButton"><div title="step out" class="debuggerButton"><img src="img/icons/baseline_vertical_align_top_black_24dp.png" onclick="handle_step_out_button();"/></div></td>
+                <td style="width:100%;"></td>
+                <td class="debuggerButton"><div title="close debugger session" class="debuggerButton"><img src="img/icons/baseline_close_black_24dp.png" onclick="handle_debug_close_button();"/></div></td>
+            </tr>
+            <tr py:when="'interpreter'">
+                <td class="debuggerButton"><div title="run" class="debuggerButton"><img id="run_button_icon" src="img/icons/baseline_play_arrow_black_24dp.png" onclick="handle_run_button();"/></div></td>
+                <td class="debuggerButton"><div title="debug" class="debuggerButton"><img src="img/icons/baseline_bug_report_black_24dp.png" onclick="handle_debug_button();"/></div></td>
+                <td class="debuggerButton"><img src="img/thinruler.png"/></td>
+                <td class="debuggerButton"><div title="undo" class="debuggerButton"><img src="img/icons/baseline_undo_black_24dp.png" onclick="editor.undo();"/></div></td>
+                <td class="debuggerButton"><div title="redo" class="debuggerButton"><img src="img/icons/baseline_redo_black_24dp.png" onclick="editor.redo();"/></div></td>
+                <td class="debuggerButton"><img src="img/thinruler.png"/></td>
+                <td class="debuggerButton"><div title="load" class="debuggerButton"><img src="img/icons/baseline_folder_open_black_24dp.png" onclick="handle_step_into_button();"/></div></td>
+                <td class="debuggerButton"><div title="save" class="debuggerButton"><img src="img/icons/baseline_save_black_24dp.png" onclick="handle_step_out_button();"/></div></td>
+            </tr>
+        </table>
+    </div>
 </div>

@@ -39,13 +39,12 @@ class DebuggerView(dict):
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
             "interpreter_text.html",
-            "debugger_form_container.xml",
+            "form_container.xml",
             "debugger_container.xml",
             "controller_script.xml",
-            "form_container.xml",
             "terminal.xml",
             "debugger_varview.xml"]
-        self["debug_mode_button"] = "leave debug mode"
+        self["current_mode"] = "debugger"
         try:
             self["debugger_view_content"] = Markup(DebuggerView._get_source_code_view(code))
         except LexerError as e:
