@@ -31,8 +31,8 @@
                 <td class="debuggerButton"><div title="undo" class="debuggerButton"><img src="img/icons/baseline_undo_black_24dp.png" onclick="editor.undo();"/></div></td>
                 <td class="debuggerButton"><div title="redo" class="debuggerButton"><img src="img/icons/baseline_redo_black_24dp.png" onclick="editor.redo();"/></div></td>
                 <td class="debuggerButton"><img src="img/thinruler.png"/></td>
-                <td class="debuggerButton"><div title="load" class="debuggerButton"><img src="img/icons/baseline_folder_open_black_24dp.png" onclick="handle_step_into_button();"/></div></td>
-                <td class="debuggerButton"><div title="save" class="debuggerButton"><img src="img/icons/baseline_save_black_24dp.png" onclick="handle_step_out_button();"/></div></td>
+                <td class="debuggerButton"><div title="load" class="debuggerButton"><img src="img/icons/baseline_folder_open_black_24dp.png" onclick="handle_open_file();"/></div></td>
+                <td class="debuggerButton"><div title="save" class="debuggerButton"><img src="img/icons/baseline_save_black_24dp.png" onclick="handle_save_file();"/></div></td>
             </tr>
         </table>
     </div>

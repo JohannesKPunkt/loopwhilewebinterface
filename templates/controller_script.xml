@@ -329,5 +329,35 @@ function handle_action(action)
 	request.open("POST", "debugger_action", true);
 	request.send(data);
 }
+
+var input_file_field = document.createElement("input");
+input_file_field.setAttribute("type", "file");
+
+function open_file(event)
+{
+    var file = event.target.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function(evt)
+    {
+        editor.setValue(evt.target.result);
+    }
+    reader.readAsText(file);
+}
+input_file_field.addEventListener("change", open_file, false);
+
+function handle_open_file()
+{
+    input_file_field.click();
+}
+
+function handle_save_file()
+{
+    var link = document.createElement("a");
+    link.setAttribute("href", "data:text/plain;charset=utf-8,"
+        + encodeURIComponent(editor.getValue()));
+    link.setAttribute("download", "program.lw");
+    link.click();
+}
 //]]>
 </script>
