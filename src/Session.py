@@ -56,13 +56,14 @@ class Session:
 
     # creates a instance of the interpreter process and returns the 
     # corresponding Popen object
-    def _create_process(self, input_data, debug=False, debug_port=-1):        
+    def _create_process(self, input_data, debug=False, debug_port=-1, reuse_input_file=False):
         input_file_path = self._sess_man.get_input_filename(self._sess_id)
-        try:
-            with open(input_file_path, "x") as input_file:
-                input_file.write(input_data)
-        except FileExistsError as e:
-            raise RuntimeError("Input file for session_id " + str(self._sess_id) + " already exists: " + str(e))
+        if not reuse_input_file:
+            try:
+                with open(input_file_path, "x") as input_file:
+                    input_file.write(input_data)
+            except FileExistsError as e:
+                raise RuntimeError("Input file for session_id " + str(self._sess_id) + " already exists: " + str(e))
 
         if debug:
             callstr = [_executable_path, "-d", "-port", str(debug_port), input_file_path]

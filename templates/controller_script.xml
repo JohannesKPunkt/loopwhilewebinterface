@@ -201,13 +201,13 @@ function check_debugger_state()
     //check if debugger stopped
     var data = new FormData();
 	data.append("session_id", session_id);
-	data.append("action", "pollstate");
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function()
 	{
 		if (this.readyState == 4 && this.status == 200)
 		{
-			if(this.responseText == "FAIL" || this.responseText == "DIED")
+			if(this.responseText == "FAIL" || this.responseText == "DIED"
+               || this.responseText == "RESTARTED")
             {
                 if(active_line != "")
                 {
@@ -220,6 +220,8 @@ function check_debugger_state()
                 {
                     switch_tab("terminal_container");
                 }
+                current_state = "stopped";
+                clearInterval(window.await_termination_agent);
             }
             else if(this.responseText != "None")
             {

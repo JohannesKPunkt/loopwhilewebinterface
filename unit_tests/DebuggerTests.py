@@ -243,7 +243,7 @@ class DebuggerTests(unittest.TestCase):
         d.resume()
 
         time.sleep(0.2)
-        self.assertEqual(d.poll_state(), DebuggerState.DIED)
+        self.assertEqual(d.poll_state(), DebuggerState.NOTSTARTED)
 
     # Test debugging of test program simple.lw with setting and 
     # removing breakpoints after run()
@@ -301,7 +301,7 @@ class DebuggerTests(unittest.TestCase):
         d.resume()
 
         time.sleep(1)
-        self.assertEqual(d.poll_state(), DebuggerState.DIED)
+        self.assertEqual(d.poll_state(), DebuggerState.NOTSTARTED)
 
     # Test debugging of test program loop.lw to check debugger state
     # after resume in a long enduring loop
@@ -335,7 +335,7 @@ class DebuggerTests(unittest.TestCase):
         self.assertEqual(d.poll_state(), DebuggerState.RUNNING)
         self.assertEqual(d.poll_state(), DebuggerState.RUNNING)
         time.sleep(10)
-        self.assertEqual(d.poll_state(), DebuggerState.DIED)
+        self.assertEqual(d.poll_state(), DebuggerState.NOTSTARTED)
 
     # Test debugging of test program loop.lw to check debugger state
     # after resume in a long enduring loop
@@ -358,7 +358,7 @@ class DebuggerTests(unittest.TestCase):
         self.assertEqual(d.poll_state(), DebuggerState.RUNNING)
         self.assertEqual(d.poll_state(), DebuggerState.RUNNING)
         time.sleep(10)
-        self.assertEqual(d.poll_state(), DebuggerState.DIED)
+        self.assertEqual(d.poll_state(), DebuggerState.NOTSTARTED)
 
     # Test debugging of test program loop.lw to check error handling
     # for set_breakpoint and remove_breakpoint

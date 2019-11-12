@@ -89,11 +89,36 @@ class Debugger(Session):
 
         self._line_buffer = LineBuffer(self._conn)
 
+    def _restart(self):
+        with self._lock:
+            self._conn.close()
+            self._conn = None
+            self._proc.kill()
+            # wait to remove zombies
+            self._proc.wait(5)
+
+            self._last_stacktrace = None
+
+            self._create_process(None, True, self._socket.get_port_no(), reuse_input_file=True)
+            self._last_state = DebuggerState.NOTSTARTED
+            try:
+                self._conn, _ = self._socket.accept()
+            except socket.timeout:
+                return
+            self._line_buffer = LineBuffer(self._conn)
+
+            # transfer all breakpoints to new debugger process
+            old_breakpoints = self._breakpoints
+            self._breakpoints = set()
+            for bp in old_breakpoints:
+                self.set_breakpoint(bp)
+
     def get_status(self):
-        if self._proc != None and self._proc.poll() is None:
-            return "running"
-        else:
-            return "terminated"
+        with self._lock:
+            if self._proc != None:
+                return "running"
+            else:
+                return "terminated"
 
     def get_proc(self):
         return self._proc
@@ -140,8 +165,7 @@ class Debugger(Session):
                 if response is None:
                     break
             except ConnectionClosed:
-                self._last_state = DebuggerState.DIED
-                self.close()
+                self._restart()
                 return last_tgram
 
             # update type

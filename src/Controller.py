@@ -134,6 +134,8 @@ class Controller(TGController):
             state = session.poll_state()
             if state is DebuggerState.DIED:
                 return "DIED"
+            elif state is DebuggerState.NOTSTARTED:
+                return "RESTARTED"
             else:
                 #return "line" + str(session.last_stacktrace()[0]["line"])
                 st = str(session.pop_last_stacktrace()).replace("\'", "\"")
