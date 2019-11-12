@@ -32,6 +32,7 @@ _lexer_rules = [
     ('\t',                                                     'TAB'),
     ('\n|\r\n',                                                'LINEBREAK'),
     ('//',                                                     'ENTER_COMMENT'),
+    ('\S',                                                     'ILLEGAL_SYMBOL'),
 ]
 
 
@@ -56,6 +57,7 @@ class DebuggerView(dict):
             logger.info("                           " + (min(10, e.pos)*" ") + "^")
             raise e
         self["session_id"] = session_id
+        self["program_code"] = code
 
     #  
     #  name: getSourceCodeView
@@ -98,7 +100,7 @@ class DebuggerView(dict):
                 output += "<font color=\"#d7432e\" style=\"opacity:.8\">" + token.val + "</font>"
             elif token.type == 'OPERATOR':
                 output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + token.val + "</font>"
-            elif token.type in ('IDENTIFIER', 'LP', 'RP', 'SEMICOLON', 'COLON', 'ASSIGNMENT'):
+            elif token.type in ('IDENTIFIER', 'LP', 'RP', 'SEMICOLON', 'COLON', 'ASSIGNMENT', 'ILLEGAL_SYMBOL'):
                 output += "<font color=\"#F8FBEF\" style=\"opacity:.8\">" + token.val + "</font>"
             elif token.type == 'SPACE':
                 output += "&nbsp;"

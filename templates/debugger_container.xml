@@ -34,6 +34,9 @@
     .activetabframe {
     }
     </style>
+    <form action="interpreter" id="leave_form" method="POST" target="_self">
+        <input type="hidden" name="program_code" value="${program_code}" />
+    </form>
     <script>
         current_tab = "terminal_container";
     </script>

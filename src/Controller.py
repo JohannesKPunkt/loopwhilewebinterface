@@ -169,32 +169,13 @@ class Controller(TGController):
                 session.step_out()
             elif action == "stepover":
                 session.step_over()
+            elif action == "close":
+                session.close()
             else:
                 return "FAIL"
             return "OK"
         except:
             logger.error("debugger_action(): Exception:" + traceback.format_exc())
-            return "FAIL"
-
-    # /debugger_leave switches back from debugger mode to interpreter mode
-    @expose('templates/interpreter.xhtml', content_type="text/html")
-    def debugger_leave(self, **kw):
-        try:
-            session_id = kw[SESSION_ID]
-            logger.debug("debugger_leave() called, session_id=" + 
-                         str(session_id))
-            session = self._sess_man.get_session(session_id)
-            # get program code of debugger session
-            program_code = session.get_program_code()
-
-            # kill debugger session
-            # TODO!
-
-            # create interpreter view showing the program code
-            return InterpreterView(program_code)
-        except:
-            logger.error("debugger_action(): Exception:" + traceback.format_exc())
-            #TODO: error page!
             return "FAIL"
 
     # /debugger is the main side of the debugger mode

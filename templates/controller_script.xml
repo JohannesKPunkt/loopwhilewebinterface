@@ -140,19 +140,8 @@ function handle_debug_button()
 
 function handle_debug_close_button()
 {
-    var form = document.createElement("form");
-    form.target = "_self";
-    form.method = "POST";
-    form.action = "debugger_leave";
-    var input = document.createElement("input");
-    input.type = "hidden";//test text
-    //input.name = "program_code";
-    //input.value = "foo";//TODO
-    input.name = "session_id";
-    input.value = session_id;
-
-    form.appendChild(input);
-    document.body.appendChild(form);
+    handle_action("close");
+    var form = document.getElementById("leave_form");
     form.submit();
 }
 

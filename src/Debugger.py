@@ -130,7 +130,12 @@ class Debugger(Session):
         with self._lock:
             if self._proc is not None:
                 self._socket.close()
-                self._conn.close()
+                try:
+                    self._conn.close()
+                except:
+                    # in case of syntax errors, the debugger process terminates
+                    # right after termination, so no connection exists.
+                    pass
                 self._kill()
 
     # Returns a set with the line numbers of all set breakpoints
