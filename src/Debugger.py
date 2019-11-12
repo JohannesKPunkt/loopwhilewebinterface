@@ -10,6 +10,7 @@ from enum import Enum
 import threading
 import Logging
 import socket
+import time
 
 from external_libs.lexer import Lexer
 from IOTools import read_timeout, LineBuffer, ConnectionClosed
@@ -160,10 +161,11 @@ class Debugger(Session):
     def _wait_for_debugger_response(self, ttype):
         last_tgram = None
         i = 0
-        while last_tgram is None and i < 100:
+        while last_tgram is None and i < 10:
             last_tgram = self._process_telegrams(ttype)
-            logger.debug("iteration " + str(i))#TODO need timeout here
             i += 1
+            if i == 9:
+                time.sleep(0.1)
         return last_tgram
         
 
