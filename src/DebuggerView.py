@@ -17,10 +17,11 @@ logger = Logging.get_logger(__name__)
 # Lexer rules that are used to provide basic syntax highlighting
 _lexer_rules = [
     ('def|enddef|LOOP|WHILE|do|enddo|if|then|else|in|out|aux', 'KEYWORD'),
+    ('loop|while',                                             'KEYWORD'),
     ('#',                                                      'HASHTAG'),
     ('\d+',                                                    'NUMBER'),
     ('[a-zA-Z_](\w|\d)*',                                      'IDENTIFIER'),
-    ('\+|\-|\*|div|\%|==|<|<=|>|>=',                           'OPERATOR'),
+    ('\+|\-|\*|div|\%|==|<|<=|>|>=|!=',                        'OPERATOR'),
     ('\(',                                                     'LP'),
     ('\)',                                                     'RP'),
     (';',                                                      'SEMICOLON'),
