@@ -50,8 +50,8 @@ function handle_run_button()
 				alert(this.responseText); //TODO only for debug
 			}
 		};
-		request.timeout = 2000;
 		request.open("POST", "run", true);
+		request.timeout = 2000;
 		request.send(data);
         switch_state("running")
 		window.reload_terminal_agent = setTimeout(reload_terminal, 500);
@@ -79,8 +79,8 @@ function handle_run_button()
 				alert("connection error " + this.status);
 			}
 		};
-		requesta.timeout = 2000;
 		requesta.open("POST", "stop", true);
+		requesta.timeout = 2000;
 		requesta.send(data);
 		
 		session_id = 0;
@@ -117,8 +117,8 @@ function check_termination()
 		}
 		
 	};
-	requesta.timeout = 2000;
 	requesta.open("POST", "check_termination", true);
+	requesta.timeout = 2000;
 	requesta.send(data);
 }
 
@@ -175,8 +175,8 @@ function breakpoint_action(id)
             }
             
         };
-        requesta.timeout = 2000;
         requesta.open("POST", "set_breakpoint", true);
+        requesta.timeout = 2000;
         requesta.send(data);
      }
      else
@@ -185,8 +185,8 @@ function breakpoint_action(id)
         data.append("session_id", session_id);
         data.append("line_no", id.slice(3));
         var requesta = new XMLHttpRequest();
-        requesta.timeout = 2000;
         requesta.open("POST", "remove_breakpoint", true);
+        requesta.timeout = 2000;
         requesta.send(data);
         elem.setAttribute("src", "/img/transparentdot.png");
      }
@@ -277,8 +277,8 @@ function check_debugger_state()
 		}
 		
 	};
-	request.timeout = 2000;
 	request.open("POST", "debugger_poll_state", true);
+	request.timeout = 2000;
 	request.send(data);
 }
 
@@ -326,8 +326,8 @@ function handle_action(action)
 	{
         //TODO: do some error handling here?
 	};
-	request.timeout = 2000;
 	request.open("POST", "debugger_action", true);
+	request.timeout = 2000;
 	request.send(data);
 }
 

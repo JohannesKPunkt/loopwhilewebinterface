@@ -25,8 +25,8 @@ function reload_terminal()
             }
 		}
 	};
-	request.timeout = 2000;
 	request.open("POST", "shell", true);
+	request.timeout = 2000;
 	request.send(data);
 }
 /*
