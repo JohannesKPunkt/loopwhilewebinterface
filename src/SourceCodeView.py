@@ -93,6 +93,7 @@ class SourceCodeView:
     #  @return a valid html <table>-tag that can be inserted into a XHTML template or file
     #
     def get_source_code_view(self, source):
+        self.source = source
         lexer = Lexer(_lexer_rules, False)
         lexer.input(source)
 

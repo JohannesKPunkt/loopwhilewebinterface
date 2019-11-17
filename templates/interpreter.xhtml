@@ -187,8 +187,34 @@
       })(this, this.document);
       </script>
 
-    <div style="max-width: 60%; height: 100px;">
+    <div style="width: 50%; height: 100px; float: left;"><!--max-width: 60%; -->
         <xi:include href="${file}" py:for="file in includes_body"/>
     </div>
+
+    <div id="tutorial_container" style="width: 42%; max-height: 478px; float: right; background: grey; margin-right: 20px; padding: 5px; overflow: auto;">
+        <style>
+            .tutorialContainer h1 { font-size: 18px; text-align: center;}
+            .tutorialContainer h2 { font-size: 15px;}
+            .tutorialContainer h3 { font-size: 15px;}
+            .tutorialContainer table { margin: 0 auto; }
+            .tutorialContainer td { border: 1px solid; }
+
+            .codeViewDiv { margin-left: auto; margin-right: auto; float: none; }
+            .codeView { width: 70%; margin: 0 auto;}
+            .codeView td { padding: 0px;border: 0; }
+            .codeViewLineNo { background-color: #2E2E2E; color: #F8FBEF; font-size: 12px; text-align: right; width: 30px;}
+            .codeViewLine { padding-left: 2px; background-color: #151515; font-size: 12px;}
+            .codeViewLink { }
+            .tutorialContainer a:link { color: blue; }
+            .tutorialContainer a:visited { color: blue; }
+            .tutorialContainer a:hover { color: blue; }
+            .tutorialContainer a:active { color: darkblue; }
+        </style>
+        <xi:include href="tutorial_container.xml" />
+    </div>
+
+    <script>
+        set_tutorial_scrollbar_position(${tutorial_scrollbar_position});
+    </script>
 </body>
 </html>

@@ -17,7 +17,7 @@ o0 := 42 * i0;
 """
 
 class InterpreterView(dict):
-    def __init__(self, program_code):
+    def __init__(self, program_code, tut_scrollbar_pos=0):
         if program_code is not None:
             self["program_code"] = program_code
         else:
@@ -27,7 +27,6 @@ class InterpreterView(dict):
         self["text_before"] = Markup("<h1>LoopWhile interactive interpreter</h1>")
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
-            "interpreter_text.html",
             "form_container.xml",
             "editor_container.xml",
             "controller_script.xml",
@@ -36,3 +35,4 @@ class InterpreterView(dict):
         self["current_mode"] = "interpreter"
         # starts with inactive session
         self["session_id"] = 0;
+        self["tutorial_scrollbar_position"] = tut_scrollbar_pos

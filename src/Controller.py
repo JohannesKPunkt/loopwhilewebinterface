@@ -19,6 +19,7 @@ import Logging
 SESSION_ID = "session_id"
 PROGRAM_CODE = "program_code"
 ACTION = "action"
+TUT_SCROLLBAR_POS = "tutorial_scrollbar_position"
 
 logger = Logging.get_logger(__name__)
 
@@ -186,7 +187,11 @@ class Controller(TGController):
         program_code = kw[PROGRAM_CODE]
         session = self._sess_man.create(Debugger, program_code)
         logger.debug("debugger(): new session_id=" + str(session.get_id()))
-        return DebuggerView(program_code, session.get_id())
+        try:
+            tut_scrollbar_pos = kw[TUT_SCROLLBAR_POS]
+        except:
+            tut_scrollbar_pos = None
+        return DebuggerView(program_code, session.get_id(), tut_scrollbar_pos=tut_scrollbar_pos)
 
 
     # /interpreter is the main site of the interpreter mode
@@ -196,4 +201,8 @@ class Controller(TGController):
             program_code = kw[PROGRAM_CODE]
         except:
             program_code = None
-        return InterpreterView(program_code)
+        try:
+            tut_scrollbar_pos = kw[TUT_SCROLLBAR_POS]
+        except:
+            tut_scrollbar_pos = None
+        return InterpreterView(program_code, tut_scrollbar_pos)

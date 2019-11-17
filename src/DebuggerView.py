@@ -35,11 +35,10 @@ class DebuggerSourceCodeView(SourceCodeView):
 
 
 class DebuggerView(dict):
-    def __init__(self, code, session_id = -1):
+    def __init__(self, code, session_id = -1, tut_scrollbar_pos=0):
         self["title"] = "Loop/While interactive debugger"
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
-            "interpreter_text.html",
             "form_container.xml",
             "debugger_container.xml",
             "controller_script.xml",
@@ -56,3 +55,4 @@ class DebuggerView(dict):
             raise e
         self["session_id"] = session_id
         self["program_code"] = code
+        self["tutorial_scrollbar_position"] = tut_scrollbar_pos

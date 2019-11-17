@@ -129,9 +129,14 @@ function handle_debug_button()
     form.method = "POST";
     form.action = "debugger";
     var input = document.createElement("input");
-    input.type = "hidden";//test text
+    input.type = "hidden";
     input.name = "program_code";
     input.value = editor.getValue();
+    var scrollbar_pos = document.createElement("input");
+    scrollbar_pos.type = "hidden";
+    scrollbar_pos.name = "tutorial_scrollbar_position";
+    scrollbar_pos.value = get_tutorial_scrollbar_position();
+    form.appendChild(scrollbar_pos);
 
     form.appendChild(input);
     document.body.appendChild(form);
@@ -142,6 +147,11 @@ function handle_debug_close_button()
 {
     handle_action("close");
     var form = document.getElementById("leave_form");
+    var scrollbar_pos = document.createElement("input");
+    scrollbar_pos.type = "hidden";
+    scrollbar_pos.name = "tutorial_scrollbar_position";
+    scrollbar_pos.value = get_tutorial_scrollbar_position();
+    form.appendChild(scrollbar_pos);
     form.submit();
 }
 
@@ -349,6 +359,27 @@ function handle_save_file()
         + encodeURIComponent(editor.getValue()));
     link.setAttribute("download", "program.lw");
     link.click();
+}
+
+function get_tutorial_scrollbar_position()
+{
+    return document.getElementById("tutorial_container").scrollTop;
+}
+function set_tutorial_scrollbar_position(pos)
+{
+    return document.getElementById("tutorial_container").scrollTop = pos;
+}
+
+function set_editor_text(text)
+{
+    if(typeof editor != 'undefined')
+    {
+        editor.setValue(text);
+    }
+    else
+    {
+        alert("You have to switch back to interpreter mode!");
+    }
 }
 //]]>
 </script>
