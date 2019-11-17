@@ -8,6 +8,8 @@
 
 from external_libs.lexer import Lexer, LexerError
 
+import html
+
 
 # Lexer rules that are used to provide basic syntax highlighting
 _lexer_rules = [
@@ -29,6 +31,39 @@ _lexer_rules = [
     ('//',                                                     'ENTER_COMMENT'),
     ('\S',                                                     'ILLEGAL_SYMBOL'),
 ]
+
+# This class addresses the issue, that words containing a keyword will be
+# tokenized into several tokens, due to the explicit whitespace handling
+# needed for correct indentation.
+class Tokenizer:
+    def __init__(self, iterator):
+        self._it = iterator
+
+    def __iter__(self):
+        self._it.__iter__()
+        self._cur_token = self._process_next_token()
+        return self
+
+    def _process_next_token(self):
+        try:
+            return self._it.__next__()
+        except StopIteration:
+            return None
+
+    def __next__(self):
+        if self._cur_token is None:
+            raise StopIteration
+        next_token = self._process_next_token()
+        while next_token is not None and (
+                self._cur_token.type in ('KEYWORD', 'BUILTIN', 'IDENTIFIER') and
+                next_token.type in ('KEYWORD', 'BUILTIN', 'IDENTIFIER')):
+            self._cur_token.val += next_token.val
+            self._cur_token.type = 'IDENTIFIER'
+            next_token = self._process_next_token()
+        curToken = self._cur_token
+        self._cur_token = next_token
+        return curToken
+
 
 # The source code view generation can be highly customized by overriding
 # the hook functions. Each of this functions returns a string as part of
@@ -66,28 +101,26 @@ class SourceCodeView:
         output = self.begin_view_hook()
         output += self.begin_row_hook(linecount)
 
-        for token in lexer.tokens():
+        for token in Tokenizer(lexer.tokens()):
             if token.type == 'LINEBREAK':
                 linecount += 1
                 output += self.end_row_hook(linecount-1) + self.begin_row_hook(linecount)
                 in_comment = False
             elif token.type == 'ENTER_COMMENT' or in_comment:
-                output += "<font color=\"#6f6564\" style=\"opacity:.8\">" + token.val + "</font>"
+                output += "<font color=\"#6f6564\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
                 in_comment = True
             elif token.type == 'NUMBER':
-                output += "<font color=\"#d7432e\" style=\"opacity:.8\">" + token.val + "</font>"
+                output += "<font color=\"#d7432e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
             elif token.type == 'OPERATOR':
-                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + token.val + "</font>"
+                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
             elif token.type in ('IDENTIFIER', 'LP', 'RP', 'SEMICOLON', 'COLON', 'ASSIGNMENT', 'ILLEGAL_SYMBOL'):
-                output += "<font color=\"#F8FBEF\" style=\"opacity:.8\">" + token.val + "</font>"
+                output += "<font color=\"#F8FBEF\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
             elif token.type == 'SPACE':
                 output += "&nbsp;"
-            elif token.type == 'HASHTAG':
-                output += "#"
             elif token.type == 'TAB':
                 output += "&nbsp;&nbsp;&nbsp;&nbsp;"
-            elif token.type == 'KEYWORD' or token.type == 'BUILTIN':
-                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + token.val + "</font>"
+            elif token.type in ('KEYWORD', 'BUILTIN', 'HASHTAG'):
+                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
             else:
                 raise RuntimeError("unknown token type: " + str(token))
         output += self.end_row_hook(linecount) + self.end_view_hook()

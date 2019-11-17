@@ -36,7 +36,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var AdaHighlightRules = function() {
 var keywords = "loop|do|enddo|while|def|enddef|" +
-               "in|out|aux|if|then|else|endif";
+               "in|out|aux|if|then|else|endif|LOOP|WHILE";
 
     var builtinConstants = (
         ""
@@ -70,7 +70,7 @@ var keywords = "loop|do|enddo|while|def|enddef|" +
             regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
         }, {
             token : "keyword.operator",
-            regex : "\\+|\\-|\\/|\\/\\/|%|<@>|@>|<@|&|\\^|~|<|>|<=|=>|==|!=|<>|="
+            regex : "\\+|\\-|\\/|\\/\\/|%|<@>|@>|<@|&|\\^|~|<|>|<=|=>|==|!=|<>|=|#"
         }, {
             token : "paren.lparen",
             regex : "[\\(]"
