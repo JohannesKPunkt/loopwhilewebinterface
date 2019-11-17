@@ -39,7 +39,6 @@ class DebuggerView(dict):
         self["title"] = "Loop/While interactive debugger"
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
-            "form_container.xml",
             "debugger_container.xml",
             "controller_script.xml",
             "terminal.xml",

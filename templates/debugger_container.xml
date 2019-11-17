@@ -1,4 +1,5 @@
-<div>
+<div xmlns:xi="http://www.w3.org/2001/XInclude" style="height: 70%;">
+	<xi:include href="form_container.xml"/>
     <script>
         function setBullet(id)
         {
@@ -22,7 +23,7 @@
     .debuggerCodeViewLine { }
     .debuggerCodeViewLineActive { background-color: #787878;}
     </style>
-    <div style="background-color:#151515; height: 300px; color:#F8FBEF; margin-left: 20px; width: 100%; max-height: 300px; overflow:auto;">
+    <div style="background-color:#151515; height: 85%; color:#F8FBEF; margin-left: 20px; width: 100%; max-height: 300px; overflow:auto;">
         ${debugger_view_content}
     </div>
 

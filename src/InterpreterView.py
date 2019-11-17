@@ -27,7 +27,6 @@ class InterpreterView(dict):
         self["text_before"] = Markup("<h1>LoopWhile interactive interpreter</h1>")
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
-            "form_container.xml",
             "editor_container.xml",
             "controller_script.xml",
             "terminal.xml",

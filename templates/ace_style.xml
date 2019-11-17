@@ -3,8 +3,8 @@
     position: relative !important;
     border: 0px solid lightgray;
     margin-left: 20px;
-    margin-top: 0px;
-    height: 300px;
+    margin-top: 0;
+    height: 85%;
     width: 100%;
     text-align: left;
 }

@@ -1,4 +1,4 @@
-<div id="terminal_container" style="max-height: 150px;width: 100%;margin-left: 20px;margin-top: 10px;">
+<div id="terminal_container" style="height: 30%; max-height: 30%;width: 100%;margin-left: 20px;margin-top: 10px;bottom: 0">
 
 <script type="text/javascript" src="jquery/jquery.min.js"></script>
 <script type="text/javascript" src="jquery-terminal/jquery.terminal.js"></script>
