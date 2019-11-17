@@ -1,0 +1,151 @@
+headline { Online Loop/While Interpreter }
+
+tableofcontents
+
+chapter { Syntax }
+    section { Basiskonstrukte }
+    text {
+        Zu Beginn eines Programms werden die Ein- und Ausgabeparameter durch
+        die Schlüsselwörter } italic{in} text{ und } italic{out} text{ festgelegt.
+        Mit } italic{aux} text{ können zusätzliche Hilfsvariablen deklariert werden.
+        Alle Variablen sind vom Typ der natürlichen Zahlen. Es stehen neben der Vorgänger-
+        und Nachfolgeroperation } italic {succ} text { und } italic { pred } text { die
+        arithmetischen Operatoren } italic {+} text {, } italic {-} text {, } italic {*}
+        text {, } italic {div} text { und } italic {mod} text { zur Verfügung.
+    }
+    linebreak
+    text {
+        Das nachfolgende Beispielprogramm liest einen Wert } italic{input} text { von
+        der Eingabe, verdoppelt ihn und gibt ihn anschließend auf der Konsole aus:
+    }
+    linebreak
+    code{
+in: input;
+out: output;
+
+output := 2 * input;
+    }
+    section { WHILE-Schleifen }
+    
+    section { LOOP-Schleifen }
+        text {
+            Um sicherzustellen, dass das vorliegende Programm nur loop-Schleifen
+            verwenden darf, kann am Anfang des Programms das Sprachflag #LOOP
+            gesetzt werden.
+        }
+        code{
+#LOOP
+def multiply
+  in: x, y;
+  out: z;
+  
+  z := 0;
+  loop x do
+    z := z + y;
+  enddo
+enddef;
+
+in: x, y;
+out: z;
+z := multiply(x, y)
+        }
+        
+    section {Makros}
+    text {
+        Makros ermöglichen die strukturierte Programmierung, indem gemeinsamer Code ausgelagert wird.
+        Eine Makrodefinition besteht dabei aus dem Namen, der Deklaration der Eingangs-, Ausgangs-
+        und Hilfsvariablen, sowie dem Code des Makros selbst. Alle Makros müssen noch vor den Parametern
+        des Hauptprogramms definiert werden. Rekursion von Makros ist dabei nicht erlaubt.
+    }
+    linebreak
+    text {
+        Das folgende Beispiel demonstriert ein Makro } italic {multiply} text {, das die Multiplikation
+        zweier natürlicher Zahlen realisiert:
+    }
+    linebreak
+    linebreak
+    code {
+def multiply
+  in: x, y;
+  out: z;
+  
+  z := 0;
+  loop x do
+    z := z + y;
+  enddo
+enddef;
+
+in: x, y;
+out: z;
+z := multiply(x, y)
+    }
+
+
+chapter { Editor und Interpreter }
+    text {
+        Über das Editorfenster links oben können Loop/While Programme editiert werden.
+        Der Editor bietet eine auf regulären Ausdrücken basierende farbige Syntaxhervorhebung,
+        copy-and-paste Funktionalität über die gewohnten Tastenkombinationen des verwendeten
+        Betriebssystems, sowie die Möglichkeit einer Vollbilddarstellung durch drücken der Taste
+        F11.
+    }
+    linebreak
+    linebreak
+    text {
+        Über das Terminalfenster links unten wird die Ausgabe des Interpreters dargestellt und
+        Nutzereingaben entgegengenommen.
+    }
+    linebreak
+    linebreak
+    text {
+        Editor und Interpreter können über die graue Menüleiste oberhalb des Editorfensters
+        gesteuert werden, wie in nachfolgender Tabelle erklärt wird:
+    }
+    linebreak
+    linebreak
+    html {
+        <table class="tutorialContainer">
+        <tr><td><img src="img/icons/baseline_play_arrow_black_24dp.png" /></td>
+            <td>Startet den Interpreter</td></tr>
+        <tr><td><img src="img/icons/baseline_bug_report_black_24dp.png" /></td>
+            <td>Startet eine neue Debuggersitzung</td></tr>
+        <tr><td><img src="img/icons/baseline_undo_black_24dp.png" /></td>
+            <td>Macht die letzte Eingabe in das Editorfenster r&uuml;ckg&auml;ngig</td></tr>
+        <tr><td><img src="img/icons/baseline_redo_black_24dp.png" /></td>
+            <td>Wiederholt die letzte Eingabe in das Editorfenster</td></tr>
+        <tr><td><img src="img/icons/baseline_folder_open_black_24dp.png" /></td>
+            <td>&Ouml;ffnet eine lokale Datei und l&auml;dt sie in das Editorfenster</td></tr>
+        <tr><td><img src="img/icons/baseline_save_black_24dp.png" /></td>
+            <td>Speichert den aktuellen Inhalt des Editorfensters in eine lokale Datei</td></tr>
+        </table>
+    }
+chapter { Debugging}
+
+text
+{
+    Nachdem in die Debuggeransicht gewechselt wurde, können Breakpoints durch klicken neben
+    die entsprechende Zeilennummer gesetzt und wieder entfernt werden. Nachdem der Debugger
+    gestartet und die Startparameter über das Terminalfenster belegt wurden, wird die Ausführung
+    des Programms unterbrochen, sobald ein Breakpoint erreicht wurde. Die Ausführung kann dann
+    entweder Schritt für Schritt weitergeführt oder direkt bis zum nächsten Breakpoint fortgesetzt
+    werden. Die Steuerung des Debuggers erfolgt analog zum Interpretermodus über die Menüleiste (siehe
+    Tablelle unten). An Stelle des Terminalfensters erscheint während der Programmausführung eine Auflistung
+    aller Variablenwerte.
+}
+
+linebreak
+linebreak
+html {
+        <table>
+        <tr><td><img src="img/icons/baseline_skip_next_black_24dp.png" /></td>
+            <td>F&uuml;hrt die Ausf&uuml;hrung des Debuggers bis zum Erreichen des n&auml;chsten Breakpoints fort</td></tr>
+        <tr><td><img src="img/icons/baseline_call_missed_black_24dp.png" style="transform:rotate(180deg);" /></td>
+            <td>F&uuml;hrt einen Schritt des Debuggers aus, &uuml;berspringt aber Aufrufe von Makros</td></tr>
+        <tr><td><img src="img/icons/baseline_vertical_align_bottom_black_24dp.png" /></td>
+            <td>F&uuml;hrt einen Schritt des Debuggers aus</td></tr>
+        <tr><td><img src="img/icons/baseline_vertical_align_top_black_24dp.png" /></td>
+            <td>Springt aus dem aktuellen Makro zur&uuml;ck an die Aufrufstelle</td></tr>
+        <tr><td><img src="img/icons/baseline_close_black_24dp.png" /></td>
+            <td>Beendet die aktuelle Debuggersitzung und wechselt zur Interpreteransicht zur&uuml;ck</td></tr>
+        </table>
+    }
