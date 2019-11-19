@@ -193,6 +193,9 @@ class Controller(TGController):
             tut_scrollbar_pos = None
         return DebuggerView(program_code, session.get_id(), tut_scrollbar_pos=tut_scrollbar_pos)
 
+    @expose('templates/interpreter.xhtml', content_type="text/html")
+    def index(self, **kw):
+        return self.interpreter()
 
     # /interpreter is the main site of the interpreter mode
     @expose('templates/interpreter.xhtml', content_type="text/html")
