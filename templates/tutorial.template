@@ -25,6 +25,25 @@ out: output;
 
 output := 2 * input;
     }
+    linebreak
+    text {
+        Die Vergleichsoperatoren } italic{<} text{, } italic{<=} text{, }
+        italic{==} text{, } italic{!=} text{, } italic{>=} text{, }
+        italic{>} text{ liefern als Ergebnis 1, wenn sie zu wahr, und 0,
+        wenn sie zu falsch evaluiert werden.
+    }
+    linebreak
+    text {
+        Das Programm im nachfolgenden Beispiel gibt aus, ob die Eingabe gerade
+        ist oder nicht:
+    }
+    code{
+in: input;
+out: output;
+
+output := input % 2;
+    }
+    
     section { WHILE-Schleifen }
     
     section { LOOP-Schleifen }
@@ -35,19 +54,13 @@ output := 2 * input;
         }
         code{
 #LOOP
-def multiply
-  in: x, y;
-  out: z;
-  
-  z := 0;
-  loop x do
-    z := z + y;
-  enddo
-enddef;
-
 in: x, y;
 out: z;
-z := multiply(x, y)
+
+z := 0;
+loop x do
+  z := z + y;
+enddo
         }
         
     section {Makros}
