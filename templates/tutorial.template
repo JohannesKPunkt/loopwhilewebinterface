@@ -41,7 +41,7 @@ output := 2 * input;
 in: input;
 out: output;
 
-output := input % 2;
+output := input mod 2;
     }
     
     section { WHILE-Schleifen }

@@ -14,11 +14,11 @@ import html
 # Lexer rules that are used to provide basic syntax highlighting
 _lexer_rules = [
     ('def|enddef|LOOP|WHILE|do|enddo|if|then|else|in|out|aux', 'KEYWORD'),
-    ('loop|while',                                             'KEYWORD'),
+    ('loop|while|div|mod',                                     'KEYWORD'),
     ('#',                                                      'HASHTAG'),
     ('\d+',                                                    'NUMBER'),
     ('[a-zA-Z_](\w|\d)*',                                      'IDENTIFIER'),
-    ('\+|\-|\*|div|\%|==|<|<=|>|>=|!=',                        'OPERATOR'),
+    ('\+|\-|\*|==|<|<=|>|>=|!=',                               'OPERATOR'),
     ('\(',                                                     'LP'),
     ('\)',                                                     'RP'),
     (';',                                                      'SEMICOLON'),

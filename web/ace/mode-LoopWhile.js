@@ -35,7 +35,7 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var AdaHighlightRules = function() {
-var keywords = "loop|do|enddo|while|def|enddef|" +
+var keywords = "loop|do|enddo|while|def|enddef|div|mod|" +
                "in|out|aux|if|then|else|endif|LOOP|WHILE";
 
     var builtinConstants = (
@@ -43,7 +43,7 @@ var keywords = "loop|do|enddo|while|def|enddef|" +
     );
 
     var builtinFunctions = (
-        "succ|pred|div"
+        "succ|pred"
     );
 
     var keywordMapper = this.createKeywordMapper({
@@ -70,7 +70,7 @@ var keywords = "loop|do|enddo|while|def|enddef|" +
             regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
         }, {
             token : "keyword.operator",
-            regex : "\\+|\\-|\\/|\\/\\/|%|<@>|@>|<@|&|\\^|~|<|>|<=|=>|==|!=|<>|=|#"
+            regex : "\\+|\\-|\\*|\\/\\/|<@>|@>|<@|&|\\^|~|<|>|<=|=>|==|!=|<>|=|#"
         }, {
             token : "paren.lparen",
             regex : "[\\(]"
