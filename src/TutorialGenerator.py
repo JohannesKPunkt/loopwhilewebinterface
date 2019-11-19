@@ -7,7 +7,7 @@ _lexer_rules = [
     ('{',                                                      LBRAC),
     ('}',                                                      RBRAC),
     ('\s',                                                     WHITESPACE),
-    ('[\w,;\.:\-\+*/\\|<>~#\'"§$%\&\(\)=\?]*',                    STRING),
+    ('[\w,;\.:\-\+*/\\|<>~#\'"§$%\&\(\)=\?!]*',                STRING),
 ]
 
 _token_map = {LBRAC: "'{'", RBRAC: "'}'", STRING: STRING, WHITESPACE: WHITESPACE}
