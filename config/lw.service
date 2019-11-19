@@ -1,0 +1,15 @@
+[Unit]
+Description=LoopWhile web interface server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=loopwhile
+ExecStart=/INSTALLATION_PATH/run.sh
+WorkingDirectory=/INSTALLATION_PATH/
+
+[Install]
+WantedBy=multi-user.target
