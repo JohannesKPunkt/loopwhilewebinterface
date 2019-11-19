@@ -59,6 +59,8 @@ class Session:
     def _create_process(self, input_data, debug=False, debug_port=-1, reuse_input_file=False):
         input_file_path = self._sess_man.get_input_filename(self._sess_id)
         if not reuse_input_file:
+            if "#IMPORT" in input_data:
+                raise RuntimeError("Input program contains '#IMPORT' statement.")
             try:
                 with open(input_file_path, "x") as input_file:
                     input_file.write(input_data)
