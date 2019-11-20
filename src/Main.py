@@ -20,13 +20,16 @@ logger = None
 if __name__ == '__main__':
     # Process arguments
     try:
-        arg_parser = ArgParser(sys.argv[1:], ["-host=", "-port=", "-loglevel=", "-logfile="], True)
-        _host = arg_parser.get_value_default("-host", "127.0.0.1")
-        _port = int(arg_parser.get_value_default("-port", "8080"))
-        _loglevel = arg_parser.get_value_default("-loglevel", "INFO")
-        _logfile = arg_parser.get_value_default("-logfile", None)
+        arg_parser = ArgParser(sys.argv[1:], ["--host=", "--port=", "--loglevel=",
+            "--logfile=", "--user_src", "--max_sessions"], True)
+        _host = arg_parser.get_value_default("--host", "127.0.0.1")
+        _port = int(arg_parser.get_value_default("--port", "8080"))
+        _loglevel = arg_parser.get_value_default("--loglevel", "INFO")
+        _logfile = arg_parser.get_value_default("--logfile", None)
+        _user_src = arg_parser.get_value_default("--user_src", "./user_src")
+        _max_sessions = int(arg_parser.get_value_default("--max_sessions", "200"))
     except Exception as e:
-        print("Exception while parsing arguments: " + str(e))#TODO use logger
+        print("Exception while parsing arguments: " + str(e))
         sys.exit(-1)
 
     # Prepare logging
@@ -42,7 +45,7 @@ if __name__ == '__main__':
     # Run server
     config = MinimalApplicationConfigurator()
     config.register(StaticsConfigurationComponent)
-    controller = Controller("./user_src", 200)
+    controller = Controller(_user_src, _max_sessions)
     try:
         config.update_blueprint({
             'root_controller': controller,
