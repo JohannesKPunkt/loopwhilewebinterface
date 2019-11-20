@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # Process arguments
     try:
         arg_parser = ArgParser(sys.argv[1:], ["--host=", "--port=", "--loglevel=",
-            "--logfile=", "--user_src", "--max_sessions"], True)
+            "--logfile=", "--user_src=", "--max_sessions="], True)
         _host = arg_parser.get_value_default("--host", "127.0.0.1")
         _port = int(arg_parser.get_value_default("--port", "8080"))
         _loglevel = arg_parser.get_value_default("--loglevel", "INFO")
