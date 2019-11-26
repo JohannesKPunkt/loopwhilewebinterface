@@ -1,4 +1,7 @@
-<div id="debugger_varview_container" class="tabframe" style="background-color: black; color: white; max-height: 150px; height: 150px; width: 100%;margin-left: 20px; margin-top: 10px; overflow: auto; font-size: 12px;">
+<div id="debugger_varview_container" class="tabframe"
+    style="background-color: black; color: lightgrey; max-height: 150px;
+           height: 150px; width: 100%;margin-left: 20px; margin-top: 10px;
+           overflow: auto; font-size: 1em; font-family: monospace;">
 <table id="debugger_varview">
     
 </table>
