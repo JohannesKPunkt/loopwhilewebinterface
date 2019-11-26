@@ -234,8 +234,15 @@ function check_debugger_state()
                 var elem = document.getElementById("line" + line);
                 elem.setAttribute("class", "debuggerCodeViewLineActive");
                 active_line = "line" + line;
-                elem.scrollIntoView();
-                
+
+                var codeView = document.getElementById("debuggerCodeView");
+                // only scroll to active line if it is not visible
+                if(codeView.scrollTop > elem.offsetTop ||
+                   codeView.scrollTop + codeView.offsetHeight < elem.offsetTop)
+                {
+                    elem.scrollIntoView();
+                }
+
                 // remove old table
                 var table_node = document.getElementById("debugger_varview");
                 table_node.remove();
