@@ -308,19 +308,33 @@ function handle_continue_button()
     handle_action("continue");
 }
 
+function handle_step_action(action)
+{
+    if (current_state == "stopped")
+    {
+        current_state = "running";
+        window.await_termination_agent = setInterval(check_debugger_state, 200);
+        handle_action("start");
+    }
+    else
+    {
+        handle_action(action);
+    }
+}
+
 function handle_step_over_button()
 {
-    handle_action("stepover");
+    handle_step_action("stepover");
 }
 
 function handle_step_into_button()
 {
-    handle_action("stepinto");
+    handle_step_action("stepinto");
 }
 
 function handle_step_out_button()
 {
-    handle_action("stepout");
+    handle_step_action("stepout");
 }
 
 function handle_action(action)

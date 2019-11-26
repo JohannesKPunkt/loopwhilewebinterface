@@ -172,6 +172,9 @@ class Controller(TGController):
                 session.step_over()
             elif action == "close":
                 session.close()
+            elif action == "start":
+                logger.debug("debugger_action(): calling session.run_and_stop_at_first_line()")
+                session.run_and_stop_at_first_line()
             else:
                 return "FAIL"
             return "OK"

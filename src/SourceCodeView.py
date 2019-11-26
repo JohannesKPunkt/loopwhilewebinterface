@@ -36,8 +36,10 @@ _lexer_rules = [
 # tokenized into several tokens, due to the explicit whitespace handling
 # needed for correct indentation.
 class Tokenizer:
-    def __init__(self, iterator):
-        self._it = iterator
+    def __init__(self, source):
+        lexer = Lexer(_lexer_rules, False)
+        lexer.input(source)
+        self._it = lexer.tokens()
 
     def __iter__(self):
         self._it.__iter__()
@@ -94,15 +96,13 @@ class SourceCodeView:
     #
     def get_source_code_view(self, source):
         self.source = source
-        lexer = Lexer(_lexer_rules, False)
-        lexer.input(source)
 
         linecount = 1
         in_comment = False
         output = self.begin_view_hook()
         output += self.begin_row_hook(linecount)
 
-        for token in Tokenizer(lexer.tokens()):
+        for token in Tokenizer(source):
             if token.type == 'LINEBREAK':
                 linecount += 1
                 output += self.end_row_hook(linecount-1) + self.begin_row_hook(linecount)

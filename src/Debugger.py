@@ -18,6 +18,7 @@ from DebuggerExceptions import DebuggerErrorMessage, CompilerErrorMessage, Debug
 from SocketManager import SocketManager
 from SessionManager import SessionManager
 from Session import Session
+from SourceCodeView import Tokenizer
 
 _lexer_rules = [
     ('\d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d',                      'DATE_TIME'),
@@ -76,6 +77,14 @@ class Debugger(Session):
         # debugger process self._proc
         self._create_process(code, True, self._socket.get_port_no())
 
+        # source file containing the users code
+        self._input_file_name = self._sess_man.get_input_filename(sess_id)
+
+        # if debugger is started via "start" command, execution is halted
+        # at the first line of the root macro, so we need a temporary breakpoint
+        # that will be deleted as soon as execution reaches the first line
+        self._start_line = -1
+
         # connection to the debugger process
         try:
             self._conn, _ = self._socket.accept()
@@ -83,9 +92,6 @@ class Debugger(Session):
             # timeout happens normally in case of syntax errors, where
             # the interpreter process terminates immediately
             return
-
-        # source file containing the users code
-        self._input_file_name = self._sess_man.get_input_filename(sess_id)
 
         self._line_buffer = LineBuffer(self._conn)
 
@@ -183,6 +189,8 @@ class Debugger(Session):
             
             if ttype is response.ttype:
                 last_tgram = response
+        if self._last_state == DebuggerState.PAUSED and self._start_line > -1:
+            self.remove_breakpoint(self._start_line)
         return last_tgram
 
     # waits for a response of a certain TelegramType, or an
@@ -253,6 +261,83 @@ class Debugger(Session):
         if self._last_state is DebuggerState.NOTSTARTED:
             self._last_state = DebuggerState.RUNNING
             self._send_cmd("run")
+
+    class StatefulTokenizer:
+        def __init__(self, source):
+            self._lexer = Tokenizer(source).__iter__()
+            self._line = 1
+            self._token = None
+            self.consume_token()
+
+        def cur_line(self):
+            return self._line
+
+        def has_token(self):
+            return self._token is not None
+
+        def consume_token(self):
+            cur_token = self._token
+            if self._token is not None and self._token.type == "LINEBREAK":
+                print("inc line")
+                self._line += 1
+            try:
+                self._token = self._lexer.__next__()
+            except:
+                self._token = None
+            return cur_token
+
+        def skip_whitespaces(self):
+            while self._token.type in ("SPACE", "TAB", "LINEBREAK"):
+                self.consume_token()
+
+        def consume_non_whitespace_token(self):
+            self.skip_whitespaces()
+            return self.consume_token()
+
+        def consume_until_value(self, value):
+            while self.has_token():
+                if self._token.val == value:
+                    return
+                self.consume_token()
+
+        def consume_until(self, ttype):
+            while self.has_token():
+                if self._token.type == ttype:
+                    return
+                self.consume_token()
+
+        def peek_token(self):
+            return self._token
+
+    def run_and_stop_at_first_line(self):
+        # determine first line of root macro
+        source = self.get_program_code()
+        tokenizer = self.StatefulTokenizer(source)
+
+        while tokenizer.has_token():
+            token = tokenizer.consume_non_whitespace_token()
+            print(token)
+            if token.type == "ENTER_COMMENT":
+                tokenizer.consume_until("LINEBREAK")
+            if token.val == "def":
+                tokenizer.consume_until_value("enddef")
+            elif token.val in ("in", "out", "aux"):
+                print("handle param decl")
+                print(tokenizer.consume_non_whitespace_token()) # colon
+                print(tokenizer.consume_non_whitespace_token()) # first parameter
+                while tokenizer.peek_token().val == ",":
+                    tokenizer.consume_non_whitespace_token() # comma
+                    tokenizer.consume_non_whitespace_token() # next parameter
+            #elif token.type in ("SPACE", "TAB", "COLON", "SEMICOLON", "LP", "RP"
+            elif token.type == "IDENTIFIER":
+                break
+
+        # set a temporary breakpoint
+        self._start_line = tokenizer.cur_line()
+        self.set_breakpoint(self._start_line)
+
+        # run
+        self.run()
 
     @staticmethod
     def parse_debugger_output(debugger_output):
