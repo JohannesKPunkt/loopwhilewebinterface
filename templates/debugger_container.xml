@@ -23,7 +23,8 @@
     .debuggerCodeViewLine { }
     .debuggerCodeViewLineActive { background-color: #787878;}
     </style>
-    <div style="background-color:#151515; height: 85%; color:#F8FBEF; margin-left: 20px; width: 100%; overflow:auto;">
+    <div style="background-color:#151515; height: 85%; color:#F8FBEF; margin-left: 20px; width: 100%; overflow:auto;"
+            id="debuggerCodeView">
         ${debugger_view_content}
     </div>
 
