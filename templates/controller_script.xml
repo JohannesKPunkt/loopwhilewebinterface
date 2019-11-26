@@ -349,6 +349,7 @@ function open_file(event)
     reader.onloadend = function(evt)
     {
         editor.setValue(evt.target.result);
+        editor.clearSelection();
     }
     reader.readAsText(file);
 }
