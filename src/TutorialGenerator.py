@@ -201,8 +201,8 @@ class TutorialGenerator:
         self._next_token(LBRAC)
         title = str(len(self.chapters)+1) + ". " + html.escape(self._consume_until(RBRAC))
         self.chapters.append((title, []))
-        self._output.append("<h3 id=\"headline" + str(self._headline_counter)
-                            + "\">" + title + "</h3>\n")
+        self._output.append("<h2 id=\"headline" + str(self._headline_counter)
+                            + "\">" + title + "</h2>\n")
         self._headline_counter += 1
 
     def _command_section(self):
@@ -214,8 +214,8 @@ class TutorialGenerator:
             raise Exception("section needs a surrounding chapter.")
         title = str(len(self.chapters)) + "." + str(len(chapter[1])+1) + ". " + title
         chapter[1].append(title)
-        self._output.append("<h4 id=\"headline" + str(self._headline_counter)
-                            + "\">" + title + "</h4>\n")
+        self._output.append("<h3 id=\"headline" + str(self._headline_counter)
+                            + "\">" + title + "</h3>\n")
         self._headline_counter += 1
 
     def _command_code(self):
