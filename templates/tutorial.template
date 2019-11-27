@@ -142,7 +142,7 @@ text
     des Programms unterbrochen, sobald ein Breakpoint erreicht wurde. Die Ausführung kann dann
     entweder Schritt für Schritt weitergeführt oder direkt bis zum nächsten Breakpoint fortgesetzt
     werden. Die Steuerung des Debuggers erfolgt analog zum Interpretermodus über die Menüleiste (siehe
-    Tablelle unten). An Stelle des Terminalfensters erscheint während der Programmausführung eine Auflistung
+    Tabelle unten). An Stelle des Terminalfensters erscheint während der Programmausführung eine Auflistung
     aller Variablenwerte.
 }
 
