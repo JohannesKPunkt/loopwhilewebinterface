@@ -14,7 +14,7 @@ import html
 # Lexer rules that are used to provide basic syntax highlighting
 _lexer_rules = [
     ('def|enddef|LOOP|WHILE|do|enddo|if|then|else|in|out|aux', 'KEYWORD'),
-    ('loop|while|div|mod',                                     'KEYWORD'),
+    ('loop|while|div|mod|endif',                               'KEYWORD'),
     ('#',                                                      'HASHTAG'),
     ('\d+',                                                    'NUMBER'),
     ('[a-zA-Z_](\w|\d)*',                                      'IDENTIFIER'),
