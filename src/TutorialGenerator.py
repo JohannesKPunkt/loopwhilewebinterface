@@ -274,8 +274,8 @@ if __name__ == '__main__':
     try:
         output_str = generator.generate(input_str)
         with open(outfile_path, "w") as output_file:
-            output_file.write("<div class=\"tutorialContainer\">\n");
+            output_file.write("<div>\n");
             output_file.write(output_str)
-            output_file.write("<br/><br/></div>\n");
+            output_file.write("<br/><br/>\n</div>\n");
     except ParserException as e:
         logger.error(traceback.format_exc())

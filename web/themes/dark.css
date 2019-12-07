@@ -1,0 +1,218 @@
+/* settings for purecss */
+.custom-menu-wrapper {
+    background-color: #808080;
+    margin-bottom: 2.5em;
+    white-space: nowrap;
+    position: relative;
+}
+
+.custom-menu {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+}
+
+.custom-menu .pure-menu-link,
+.custom-menu .pure-menu-heading {
+    color: white;
+}
+
+.custom-menu .pure-menu-link:hover,
+.custom-menu .pure-menu-heading:hover {
+    background-color: transparent;
+}
+
+.custom-menu-top {
+    position: relative;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.custom-menu-brand {
+    display: block;
+    text-align: center;
+    position: relative;
+}
+
+.custom-menu-toggle {
+    width: 44px;
+    height: 44px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    right: 0;
+    display: none;
+}
+
+.custom-menu-toggle .bar {
+    background-color: white;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 100px;
+    position: absolute;
+    top: 22px;
+    right: 12px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.custom-menu-toggle .bar:first-child {
+    -webkit-transform: translateY(-6px);
+    -moz-transform: translateY(-6px);
+    -ms-transform: translateY(-6px);
+    transform: translateY(-6px);
+}
+
+.custom-menu-toggle.x .bar {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.custom-menu-toggle.x .bar:first-child {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.custom-menu-screen {
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    transition: all 0.5s;
+    height: 3em;
+    width: 70em;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+}
+
+.custom-menu-tucked .custom-menu-screen {
+    -webkit-transform: translateY(-44px);
+    -moz-transform: translateY(-44px);
+    -ms-transform: translateY(-44px);
+    transform: translateY(-44px);
+}
+
+@media (max-width: 62em) {
+
+    .custom-menu {
+        display: block;
+  }
+
+    .custom-menu-toggle {
+        display: block;
+            display: none\9;
+    }
+
+    .custom-menu-bottom {
+        position: absolute;
+        width: 100%;
+        border-top: 1px solid #eee;
+        background-color: #808080\9;
+        z-index: 100;
+    }
+
+    .custom-menu-bottom .pure-menu-link {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        -moz-transform: translateX(0);
+        -ms-transform: translateX(0);
+        transform: translateX(0);
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -ms-transition: all 0.5s;
+        transition: all 0.5s;
+    }
+
+    .custom-menu-bottom.custom-menu-tucked .pure-menu-link {
+        -webkit-transform: translateX(-140px);
+        -moz-transform: translateX(-140px);
+        -ms-transform: translateX(-140px);
+        transform: translateX(-140px);
+        opacity: 0;
+        opacity: 1\9;
+    }
+
+    .pure-menu-horizontal.custom-menu-tucked {
+        z-index: -1;
+        top: 45px;
+        position: absolute;
+        overflow: hidden;
+    }
+}
+
+
+/* general settings for the tutorial container */
+.tutorialContainer h1 { font-size: 18px; text-align: center;}
+.tutorialContainer h2 { font-size: 15px;}
+.tutorialContainer h3 { font-size: 14px;}
+
+.tutorialContainerTable {  width: 70%; margin: 0 auto; border-collapse:collapse;}
+.tutorialContainerTable td { border: 1px solid; }
+
+.tutorialContainer a:link { color: blue; }
+.tutorialContainer a:visited { color: blue; }
+.tutorialContainer a:hover { color: blue; }
+.tutorialContainer a:active { color: darkblue; }
+
+.tutorialContainer {
+    width: 42%;
+    max-height: 80%;
+    float: right;
+    background: grey;
+    margin-right: 20px;
+    padding: 5px;
+    overflow: auto;
+}
+
+/* settings for code snippets in tutorial */
+.codeViewDiv { margin-left: auto; margin-right: auto; float: none; }
+.codeView {  width: 70%; margin: 0 auto;border-collapse:collapse; }
+.codeView td { padding: 0px;border: 0; }
+.codeViewLineNo { background-color: #2e2e2e; color: #f8fbef; text-align: right; width: 30px;border: 0;font-size: 12px;}
+.codeViewLine { padding-left: 2px; background-color:#151515;font-size: 12px;border: 0;}
+.codeViewLink {}
+
+/* common settings for debuggerCodeView and codeView */
+.codeViewComment  { color: #6f6564;                               }
+.codeViewKeyword  { color: #d7910e; font-weight: 500; opacity: .8;                    }
+.codeViewNumber   { color: #d7432e; opacity: .8;                    }
+.codeViewText     { color: #f8fbef;                    }
+.codeViewBuiltin  { color: #d7910e; font-weight: 700; opacity: .8; }
+.codeViewOperator { color: #d7910e; opacity: .8;                    }
+
+/* settings for code view in debugger mode */
+.debuggerCodeView { background-color:#151515;border-collapse:collapse; font-size:12px;width:100%;height:100%;}
+.debuggerCodeView td, .debuggerCodeView th { padding:0px;padding-top:4px; border:0; white-space: nowrap;}
+.debuggerCodeViewLineNo { background-color:#2e2e2e; color: #f8fbef; text-align: right; width: 40px;}
+.debuggerCodeViewSide { background-color:#2e2e2e; line-height: 0px;padding: 15px; width: 20px;}
+.debuggerCodeViewLine { }
+.debuggerCodeViewLineActive { background-color: #787878;}
+
+/* settings for terminal and debugger varview */
+.tabframe {
+    height: 30%;
+    max-height: 30%;
+    width: 100%;
+    margin-left: 20px;
+    margin-top: 10px;
+    bottom: 0;
+    overflow: auto;
+    border : none;
+    --bg-color: black;
+    background-color: var(--bg-color);
+    color: lightgrey;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.visible { }
+.hidden  { display: none; }

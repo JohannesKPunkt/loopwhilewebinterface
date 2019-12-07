@@ -1,16 +1,14 @@
-<div id="terminal_container" style="height: 30%; max-height: 30%;width: 100%;margin-left: 20px;margin-top: 10px;bottom: 0">
+<div id="terminal_container" style="height: 30%; max-height: 30%;width: 100%;margin-left: 20px;margin-top: 10px;bottom: 0" class="tabframe visible">
 
 <script type="text/javascript" src="jquery/jquery.min.js"></script>
 <script type="text/javascript" src="jquery-terminal/jquery.terminal.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 $('#terminal_container').height($(document).height());
-terminal = $('#terminal_container').terminal('shell', {custom_prompt : "", hello_message : 'Click \'run\' to execute the program above.'});
-//terminal.terminal_command("test1", "test2"); //http://127.0.0.1:8000
+terminal = $('#terminal_container').terminal('shell', {custom_prompt : "", hello_message : 'Click \'run\' to execute the program above.', inherit_style : 'true'});
 
 function reload_terminal()
 {
-	//global_terminal_command("5", "5");
     var data = new FormData();
 	data.append("session_id", session_id);
 	data.append("input", "");
@@ -29,12 +27,6 @@ function reload_terminal()
 	request.timeout = 2000;
 	request.send(data);
 }
-/*
-function clear_terminal()
-{
-	global_terminal_append("Hallo");
-}
-*/
 //]]>
 </script>
 </div>

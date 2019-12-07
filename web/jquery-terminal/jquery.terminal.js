@@ -194,7 +194,20 @@
 			terminal_input.css('width', '80%');
 			terminal_input.attr('autocomplete', 'off');
 
-			if (settings.unix_theme)
+			if (settings.inherit_style == 'true')
+			{
+				terminal_form.css({
+					'padding' : '0',
+					'margin' : '0',
+				});
+				terminal_input.css({
+					'border' : 'none',
+					'background-color': 'var(--bg-color)',
+					'padding' : '0',
+					'margin' : '0',
+				});
+			}
+			else
 			{
 				terminal_container.css({
 					'border' : 'none',

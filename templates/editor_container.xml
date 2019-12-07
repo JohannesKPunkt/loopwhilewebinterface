@@ -30,7 +30,7 @@
 
     // create first editor
     var editor = ace.edit("editor");//, document.getElementById("editor_container"));
-    editor.setTheme("ace/theme/twilight");
+    editor.setTheme("ace/theme/iplastic");//for dark, use twilight
     editor.session.setMode("ace/mode/LoopWhile");
     editor.renderer.setScrollMargin(10, 10);
     editor.setOptions({

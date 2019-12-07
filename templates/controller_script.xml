@@ -294,8 +294,8 @@ function switch_tab(tabname)
     var oldtab = document.getElementById(current_tab);
     current_tab = tabname;
     var newtab = document.getElementById(current_tab);
-    oldtab.setAttribute("class", "tabframe");
-    newtab.setAttribute("class", "activetabframe");
+    oldtab.setAttribute("class", "tabframe hidden");
+    newtab.setAttribute("class", "tabframe visible");
 }
 
 function handle_continue_button()

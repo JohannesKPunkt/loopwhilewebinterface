@@ -117,7 +117,7 @@ chapter { Editor und Interpreter }
     linebreak
     linebreak
     html {
-        <table class="tutorialContainer">
+        <table class="tutorialContainerTable">
         <tr><td><img src="img/icons/baseline_play_arrow_black_24dp.png" /></td>
             <td>Startet den Interpreter</td></tr>
         <tr><td><img src="img/icons/baseline_bug_report_black_24dp.png" /></td>
@@ -149,7 +149,7 @@ text
 linebreak
 linebreak
 html {
-        <table>
+        <table class="tutorialContainerTable">
         <tr><td><img src="img/icons/baseline_skip_next_black_24dp.png" /></td>
             <td>F&uuml;hrt die Ausf&uuml;hrung des Debuggers bis zum Erreichen des n&auml;chsten Breakpoints fort</td></tr>
         <tr><td><img src="img/icons/baseline_call_missed_black_24dp.png" style="transform:rotate(180deg);" /></td>

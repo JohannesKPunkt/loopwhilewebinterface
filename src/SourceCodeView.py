@@ -108,20 +108,22 @@ class SourceCodeView:
                 output += self.end_row_hook(linecount-1) + self.begin_row_hook(linecount)
                 in_comment = False
             elif token.type == 'ENTER_COMMENT' or in_comment:
-                output += "<font color=\"#6f6564\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
+                output += "<span class=\"codeViewComment\">" + html.escape(token.val) + "</span>"
                 in_comment = True
             elif token.type == 'NUMBER':
-                output += "<font color=\"#d7432e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
+                output += "<span class=\"codeViewNumber\">" + html.escape(token.val) + "</span>"
             elif token.type == 'OPERATOR':
-                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
+                output += "<span class=\"codeViewOperator\">" + html.escape(token.val) + "</span>"
             elif token.type in ('IDENTIFIER', 'LP', 'RP', 'SEMICOLON', 'COLON', 'ASSIGNMENT', 'ILLEGAL_SYMBOL'):
-                output += "<font color=\"#F8FBEF\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
+                output += "<span class=\"codeViewText\">" + html.escape(token.val) + "</span>"
             elif token.type == 'SPACE':
                 output += "&nbsp;"
             elif token.type == 'TAB':
                 output += "&nbsp;&nbsp;&nbsp;&nbsp;"
-            elif token.type in ('KEYWORD', 'BUILTIN', 'HASHTAG'):
-                output += "<font color=\"#d7910e\" style=\"opacity:.8\">" + html.escape(token.val) + "</font>"
+            elif token.type == 'BUILTIN':
+                output += "<span class=\"codeViewBuiltin\">" + html.escape(token.val) + "</span>"
+            elif token.type in ('KEYWORD', 'HASHTAG'):
+                output += "<span class=\"codeViewKeyword\">" + html.escape(token.val) + "</span>"
             else:
                 raise RuntimeError("unknown token type: " + str(token))
         output += self.end_row_hook(linecount) + self.end_view_hook()
