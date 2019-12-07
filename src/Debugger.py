@@ -28,7 +28,7 @@ _lexer_rules = [
     ('(\w| |\d|,)+',                                           'STR'),
 ]
 
-_debugger_cmd_timeout = 5.0
+_debugger_cmd_timeout = 15.0
 
 class TelegramType(Enum):
     AT_BREAKPOINT = 0
