@@ -7,7 +7,7 @@
 
 
 import threading
-import secrets
+import random
 
 from Timer import Timer
 
@@ -28,7 +28,7 @@ class SessionManager:
         self._max_sessions = max_sessions
 
         # secure random number generator to generate session_ids
-        self._randgen = secrets.SystemRandom()
+        self._randgen = random.SystemRandom()
 
     #  
     #  name: create_session
