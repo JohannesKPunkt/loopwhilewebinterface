@@ -157,7 +157,7 @@ function handle_debug_button()
             }
             else
             {
-                global_terminal_append(payload);
+                terminal_add_text(payload);
             }
         }
 

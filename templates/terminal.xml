@@ -1,12 +1,91 @@
-<div id="terminal_container" style="height: 30%; max-height: 30%;width: 100%;margin-left: 20px;margin-top: 10px;bottom: 0" class="tabframe visible">
+<div id="terminal_container" class="tabframe visible" style="display: flex; flex-direction: column;">
+    Click 'run' to execute the program above<br/>
+    <form action="javascript:terminal_send(terminal_input.value)" id="terminal_form">
+        <input type="text" id="terminal_input" autocomplete="off" style="width: 80%; background-color: var(--bg-color); padding: 0; margin: 0; border: none;"></input>
+    </form>
 
-<script type="text/javascript" src="jquery/jquery.min.js"></script>
-<script type="text/javascript" src="jquery-terminal/jquery.terminal.js"></script>
+    <div onclick="terminal_jumpinto()" style="flex-grow: 1">
+    </div>
+
 <script type="text/javascript">
 //<![CDATA[
-$('#terminal_container').height($(document).height());
-terminal = $('#terminal_container').terminal('shell', {custom_prompt : "", hello_message : 'Click \'run\' to execute the program above.', inherit_style : 'true'});
+function terminal_jumpinto()
+{
+    var input = document.getElementById("terminal_input");
+    input.focus();
+    input.select();
+}
 
+terminal_jumpinto();
+
+function terminal_send(input)
+{
+    var form = document.getElementById("terminal_form");
+    terminal_add_text(input + '\n');
+    form.reset();
+    if(input != "")
+    {
+        var data = new FormData();
+        data.append("session_id", session_id);
+        data.append("input", input);
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function()
+        {
+            if (this.readyState == 4 && this.status == 200)
+            {
+                if (this.responseText != "")
+                {
+                    terminal_add_text(this.responseText);
+                }
+            }
+        };
+        request.open("POST", "shell", true);
+        request.timeout = 2000;
+        request.send(data);
+    }
+}
+function terminal_add_text(text)
+{
+    var cur = 0;
+    var end;
+    while(cur < text.length)
+    {
+        end = text.indexOf('\n', cur);
+        if(end == -1)
+        {
+            end = text.length;
+        }
+
+        line = text.substring(cur, end);
+        terminal_add_line(line);
+
+        var form = document.getElementById("terminal_form");
+        var input = document.getElementById("terminal_input");
+
+        if(end != text.length)
+        {
+            var br = document.createElement("br");
+            form.insertBefore(br, input);
+        }
+
+        input.scrollIntoView();
+
+        text = text.substring(cur)
+        cur = end-cur+1;
+    }
+
+    var input = document.getElementById("terminal_input");
+    input.focus();
+    input.select();
+}
+function terminal_add_line(text)
+{
+    var span = document.createElement("span");
+    span.appendChild(document.createTextNode(text));
+    var form = document.getElementById("terminal_form");
+    var input = document.getElementById("terminal_input");
+    form.insertBefore(span, input);
+}
 function reload_terminal()
 {
     var data = new FormData();
@@ -19,7 +98,7 @@ function reload_terminal()
 		{
             if (this.responseText != "")
             {
-                global_terminal_append(this.responseText);
+                terminal_add_text(this.responseText);
             }
 		}
 	};
