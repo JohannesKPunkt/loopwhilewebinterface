@@ -1,7 +1,7 @@
 <div id="terminal_container" class="tabframe visible" style="display: flex; flex-direction: column;">
     Click 'run' to execute the program above<br/>
     <form action="javascript:terminal_send(terminal_input.value)" id="terminal_form">
-        <input type="text" id="terminal_input" autocomplete="off" style="width: 80%; background-color: var(--bg-color); padding: 0; margin: 0; border: none;"></input>
+        <input type="text" id="terminal_input" autocomplete="off" style="width: 80%; padding: 0; margin: 0; border: none;"></input>
     </form>
 
     <div onclick="terminal_jumpinto()" style="flex-grow: 1">
@@ -16,7 +16,16 @@ function terminal_jumpinto()
     input.select();
 }
 
-terminal_jumpinto();
+function terminal_setup()
+{
+    terminal_jumpinto();
+    var elem = document.getElementById("terminal_container");
+    var style = window.getComputedStyle(elem, null);
+    var input = document.getElementById("terminal_input");
+    input.style.backgroundColor = style.backgroundColor;
+}
+
+terminal_setup();
 
 function terminal_send(input)
 {

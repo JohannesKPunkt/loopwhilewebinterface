@@ -207,8 +207,7 @@
     bottom: 0;
     overflow: auto;
     border : none;
-    --bg-color: #f0f0f0;
-    background-color: var(--bg-color);
+    background-color: #f0f0f0;
     color: #575757;
     font-size: 1em;
     font-family: monospace;

@@ -207,8 +207,7 @@
     bottom: 0;
     overflow: auto;
     border : none;
-    --bg-color: black;
-    background-color: var(--bg-color);
+    background-color: black;
     color: lightgrey;
     font-size: 1em;
     font-family: monospace;
