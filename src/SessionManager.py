@@ -7,6 +7,7 @@
 
 
 import threading
+import secrets
 
 from Timer import Timer
 
@@ -25,21 +26,22 @@ class SessionManager:
 
         self._src_path = src_path
         self._max_sessions = max_sessions
-    
+
+        # secure random number generator to generate session_ids
+        self._randgen = secrets.SystemRandom()
+
     #  
     #  name: create_session
     #  @return a new allocated session_id that is valid as long as delete_session
     #  
     def _create_session_id(self):
         with self._lock:
-            nextid = self._last_session_id+1;
-            while str(nextid) in self._running_sessions:
-                if nextid == self._last_session_id:
-                    raise RuntimeError("All session ids used");
-                nextid += 1
-            self._last_session_id = nextid;
-            self._running_sessions.add(str(nextid));
-            return str(nextid)
+            if len(self._session_map) >= self._max_sessions:
+                raise RuntimeError("Too much sessions.")
+            sess_id = self._randgen.randint(0, 2**31)
+            while self._session_map.get(sess_id):
+                sess_id = self._randgen.randint(0, 2**31)
+            return str(sess_id)
 
     #  
     #  name: check_session
