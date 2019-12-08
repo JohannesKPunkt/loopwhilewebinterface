@@ -86,6 +86,7 @@ class Debugger(Session):
         self._start_line = -1
 
         # connection to the debugger process
+        self._conn = None
         try:
             self._conn, _ = self._socket.accept()
         except socket.timeout:
@@ -118,6 +119,11 @@ class Debugger(Session):
             self._breakpoints = set()
             for bp in old_breakpoints:
                 self.set_breakpoint(bp)
+
+    # returns True, if the debugger process failed, e.g. in case of a syntax error
+    # in the given program
+    def is_failed(self):
+        return self._conn is None
 
     def get_status(self):
         with self._lock:

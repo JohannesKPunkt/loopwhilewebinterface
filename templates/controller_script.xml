@@ -124,23 +124,47 @@ function check_termination()
 
 function handle_debug_button()
 {
-    var form = document.createElement("form");
-    form.target = "_self";
-    form.method = "POST";
-    form.action = "debugger";
-    var input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "program_code";
-    input.value = editor.getValue();
-    var scrollbar_pos = document.createElement("input");
-    scrollbar_pos.type = "hidden";
-    scrollbar_pos.name = "tutorial_scrollbar_position";
-    scrollbar_pos.value = get_tutorial_scrollbar_position();
-    form.appendChild(scrollbar_pos);
+    var data = new FormData();
+    data.append("session_id", session_id);
+    data.append("program_code", editor.getValue());
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function()
+    {
+        if (this.readyState == 4 && this.status == 200)
+        {
+            var pos = this.responseText.indexOf(",");
+            var response = this.responseText.substring(0, pos);
+            var payload = this.responseText.substring(pos+1, this.responseText.length);
 
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
+            if (response == "OK")
+            {
+                var form = document.createElement("form");
+                form.target = "_self";
+                form.method = "POST";
+                form.action = "debugger";
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "session_id";
+                input.value = payload;
+                var scrollbar_pos = document.createElement("input");
+                scrollbar_pos.type = "hidden";
+                scrollbar_pos.name = "tutorial_scrollbar_position";
+                scrollbar_pos.value = get_tutorial_scrollbar_position();
+                form.appendChild(scrollbar_pos);
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+            else
+            {
+                global_terminal_append(payload);
+            }
+        }
+
+    };
+    request.open("POST", "start_debug_session", true);
+    request.timeout = 2000;
+    request.send(data);
 }
 
 function handle_debug_close_button()

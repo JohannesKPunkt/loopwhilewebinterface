@@ -182,19 +182,37 @@ class Controller(TGController):
             logger.error("debugger_action(): Exception:" + traceback.format_exc())
             return "FAIL"
 
-    # /debugger is the main side of the debugger mode
-    #@expose()#(content_type="text/html")
+    # /debugger is the main side of the debugger mode.
+    # Given a valid session_id, it generates a DebuggerView.
     @expose('templates/interpreter.xhtml', content_type="text/html")
     def debugger(self, **kw):
         logger.debug("debugger() called")
-        program_code = kw[PROGRAM_CODE]
-        session = self._sess_man.create(Debugger, program_code)
+        sess_id = kw[SESSION_ID]
+        session = self._sess_man.get_session(sess_id)
         logger.debug("debugger(): new session_id=" + str(session.get_id()))
         try:
             tut_scrollbar_pos = kw[TUT_SCROLLBAR_POS]
         except:
             tut_scrollbar_pos = None
-        return DebuggerView(program_code, session.get_id(), tut_scrollbar_pos=tut_scrollbar_pos)
+        return DebuggerView(session.get_program_code(), sess_id, tut_scrollbar_pos=tut_scrollbar_pos)
+
+    # /start_debug_session starts a debugger session and returns a tuple "OK,<SESSION_ID>",
+    # if the debugger process could be successfully started. If an error occurs, it returns
+    # a tuple "FAIL,<ERROR_MESSAGE>" with an appropriate error message
+    @expose(content_type="text")
+    def start_debug_session(self, **kw):
+        logger.debug("start_debug_session() called")
+        program_code = kw[PROGRAM_CODE]
+        session = self._sess_man.create(Debugger, program_code)
+        logger.debug("start_debug_session(): new session_id=" + str(session.get_id()))
+        if session.is_failed():
+            logger.debug("start_debug_session(): process failed")
+            terminal_output = session.poll_user_output()
+            logger.debug("output was: " + terminal_output);
+            session.close();
+
+            return "FAIL," + terminal_output
+        return "OK," + session.get_id()
 
     @expose('templates/interpreter.xhtml', content_type="text/html")
     def index(self, **kw):
