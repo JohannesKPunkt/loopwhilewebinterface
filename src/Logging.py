@@ -5,6 +5,7 @@
 #
 
 import logging
+import logging.handlers
 
 _global_log_level = "DEBUG"
 _global_handler = None
@@ -21,7 +22,7 @@ def set_global_options(level, logfile):
     
     if logfile is not None:
         logger.info("Logging to file " + logfile)
-        _global_handler = logging.FileHandler(logfile) #TODO use RotatingFileHandler instead
+        _global_handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=1024*1024, backupCount=5)
         
         formatter = logging.Formatter("%(asctime)-15s - %(name)s - %(levelname)s - %(message)s")
         _global_handler.setFormatter(formatter)
