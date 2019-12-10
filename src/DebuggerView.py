@@ -35,14 +35,7 @@ class DebuggerSourceCodeView(SourceCodeView):
 
 
 class DebuggerView(dict):
-    def __init__(self, code, session_id = -1, tut_scrollbar_pos=0):
-        self["title"] = "Loop/While interactive debugger"
-        self["includes_head"] = ["ace_style.xml"]
-        self["includes_body"] = [
-            "debugger_container.xml",
-            "controller_script.xml",
-            "terminal.xml",
-            "debugger_varview.xml"]
+    def __init__(self, code):
         self["current_mode"] = "debugger"
         try:
             self["debugger_view_content"] = Markup(DebuggerSourceCodeView().get_source_code_view(code))
@@ -52,6 +45,3 @@ class DebuggerView(dict):
             logger.info("LexerError for user input: " + escaped)
             logger.info("                           " + (min(10, e.pos)*" ") + "^")
             raise e
-        self["session_id"] = session_id
-        self["program_code"] = code
-        self["tutorial_scrollbar_position"] = tut_scrollbar_pos

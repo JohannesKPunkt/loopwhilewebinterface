@@ -184,17 +184,14 @@ class Controller(TGController):
 
     # /debugger is the main side of the debugger mode.
     # Given a valid session_id, it generates a DebuggerView.
-    @expose('templates/interpreter.xhtml', content_type="text/html")
+    @expose('templates/debugger_container.xml', content_type="text/html")
     def debugger(self, **kw):
         logger.debug("debugger() called")
         sess_id = kw[SESSION_ID]
+        logger.debug("debugger(): using session_id=" + sess_id)
         session = self._sess_man.get_session(sess_id)
-        logger.debug("debugger(): new session_id=" + str(session.get_id()))
-        try:
-            tut_scrollbar_pos = kw[TUT_SCROLLBAR_POS]
-        except:
-            tut_scrollbar_pos = None
-        return DebuggerView(session.get_program_code(), sess_id, tut_scrollbar_pos=tut_scrollbar_pos)
+
+        return DebuggerView(session.get_program_code())
 
     # /start_debug_session starts a debugger session and returns a tuple "OK,<SESSION_ID>",
     # if the debugger process could be successfully started. If an error occurs, it returns
@@ -225,8 +222,5 @@ class Controller(TGController):
             program_code = kw[PROGRAM_CODE]
         except:
             program_code = None
-        try:
-            tut_scrollbar_pos = kw[TUT_SCROLLBAR_POS]
-        except:
-            tut_scrollbar_pos = None
-        return InterpreterView(program_code, tut_scrollbar_pos)
+
+        return InterpreterView(program_code)

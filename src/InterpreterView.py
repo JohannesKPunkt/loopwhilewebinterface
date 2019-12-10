@@ -17,7 +17,7 @@ o0 := 42 * i0;
 """
 
 class InterpreterView(dict):
-    def __init__(self, program_code, tut_scrollbar_pos=0):
+    def __init__(self, program_code):
         if program_code is not None:
             self["program_code"] = program_code
         else:
@@ -28,10 +28,11 @@ class InterpreterView(dict):
         self["includes_head"] = ["ace_style.xml"]
         self["includes_body"] = [
             "editor_container.xml",
+            "debugger_placeholder.xml",
             "controller_script.xml",
             "terminal.xml",
+            "debugger_varview.xml",
         ]
         self["current_mode"] = "interpreter"
         # starts with inactive session
         self["session_id"] = 0;
-        self["tutorial_scrollbar_position"] = tut_scrollbar_pos

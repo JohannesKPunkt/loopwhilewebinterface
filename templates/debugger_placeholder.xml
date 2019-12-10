@@ -1,0 +1,4 @@
+<div class="hidden" id="debugger_placeholder" style="height: 70%;">
+    <!-- The inner HTML of this div is generated
+         dynamically when debug mode is entered -->
+</div>

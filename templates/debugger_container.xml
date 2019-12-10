@@ -1,30 +1,7 @@
-<div xmlns:xi="http://www.w3.org/2001/XInclude" style="height: 70%;">
+<div xmlns:xi="http://www.w3.org/2001/XInclude" style="height: 100%;">
 	<xi:include href="form_container.xml"/>
-    <script>
-        function setBullet(id)
-        {
-             var elem = document.getElementById(id);
-             if (elem.getAttribute("src") == "/img/transparentdot.png")
-             {
-                 elem.setAttribute("src", "/img/reddot.png");
-             }
-             else
-             {
-                 elem.setAttribute("src", "/img/transparentdot.png");
-             }
-        }
-        active_line = "";
-    </script>
-
     <div style="height: 85%; margin-left: 20px; width: 100%; overflow:auto;overflow-x:auto;"
             id="debuggerCodeView">
         ${debugger_view_content}
     </div>
-
-    <form action="interpreter" id="leave_form" method="POST" target="_self">
-        <input type="hidden" name="program_code" value="${program_code}" />
-    </form>
-    <script>
-        current_tab = "terminal_container";
-    </script>
 </div>
