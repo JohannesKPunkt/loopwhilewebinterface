@@ -39,9 +39,11 @@ class SessionManager:
             if len(self._session_map) >= self._max_sessions:
                 raise RuntimeError("Too much sessions.")
             sess_id = self._randgen.randint(0, 2**31)
-            while self._session_map.get(sess_id):
+            while sess_id in self._running_sessions:
                 sess_id = self._randgen.randint(0, 2**31)
-            return str(sess_id)
+            sess_id = str(sess_id)
+            self._running_sessions.add(sess_id)
+            return sess_id
 
     #  
     #  name: check_session
