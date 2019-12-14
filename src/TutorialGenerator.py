@@ -2,15 +2,17 @@ LBRAC = "LBRAC"
 RBRAC = "RBRAC"
 STRING = "STRING"
 WHITESPACE = "WHITESPACE"
+COMMAND = "COMMAND"
 
 _lexer_rules = [
     ('{',                                                      LBRAC),
     ('}',                                                      RBRAC),
     ('\s',                                                     WHITESPACE),
-    ('[\w,;\.:\-\+*/\\|<>~#\'"§$%\&\(\)=\?!]*',                STRING),
+    ('\\\\(\w+)',                                              COMMAND),
+    ('([\w,;\.:\-\+*/|<>~#\'"§$%\&\(\)=\?!]|\\\\)*',           STRING),
 ]
 
-_token_map = {LBRAC: "'{'", RBRAC: "'}'", STRING: STRING, WHITESPACE: WHITESPACE}
+_token_map = {LBRAC: "'{'", RBRAC: "'}'", STRING: STRING, WHITESPACE: WHITESPACE, COMMAND: COMMAND}
 
 from external_libs.lexer import Lexer, LexerError, Token
 from ArgParser import ArgParser
@@ -133,7 +135,7 @@ class TutorialGenerator:
             else:
                 self._raise_parse_exception(max(len(self._input)-1, 0),
                                             "expected string sequence terminated by token of type " + _token_map[stop_type]
-                                            + " got " + _token_map[token.type] + " instead.")
+                                            + ", got " + _token_map[token.type] + " instead.")
             token = self._next_token(skip_whitespaces = False)
 
     # Parses the input description file, generates the HTML code and returns it as a string
@@ -145,47 +147,52 @@ class TutorialGenerator:
             self._it.__iter__()
             token = self._next_token_or_eof()
             while token != EOF:
-                if token.type == STRING:
-                    if   token.val == "headline":
+                if token.type == COMMAND:
+                    if   token.val == "\\headline":
                         self._command_headline()
-                    elif token.val == "subhead":
+                    elif token.val == "\\subhead":
                         self._command_subhead()
-                    elif token.val == "code":
+                    elif token.val == "\\code":
                         self._command_code()
-                    elif token.val == "chapter":
+                    elif token.val == "\\chapter":
                         self._command_chapter()
-                    elif token.val == "section":
+                    elif token.val == "\\section":
                         self._command_section()
-                    elif token.val == "text":
-                        self._command_text()
-                    elif token.val == "linebreak":
+                    elif token.val == "\\linebreak":
                         self._command_linebreak()
-                    elif token.val == "link":
+                    elif token.val == "\\link":
                         self._command_link()
-                    elif token.val == "bold":
+                    elif token.val == "\\bold":
                         self._command_bold()
-                    elif token.val == "italic":
+                    elif token.val == "\\italic":
                         self._command_italic()
-                    elif token.val == "tableofcontents":
+                    elif token.val == "\\tableofcontents":
                         self._command_tableofcontents()
-                    elif token.val == "html":
+                    elif token.val == "\\html":
                         self._command_html()
                     else:
                         self._raise_parse_exception(token.pos, "invalid command token: \"" + token.val + "\"")
                 elif token.type == WHITESPACE:
                     pass
+                elif token.type == STRING:
+                    self._output.append(html.escape(token.val))
                 else:
                     self._raise_parse_exception(token.pos, "expected command token")
                 token = self._next_token_or_eof()
         except LexerError as e:
-            _raise_parse_exception(e.pos, "invalid token")
+            self._raise_parse_exception(e.pos, "invalid token")
 
         out_str = ""
+        need_whitespace = False
         for entry in self._output:
             if isinstance(entry, str):
+                if need_whitespace:
+                        out_str += " "
                 out_str += entry
+                need_whitespace = True if out_str[-1] != "\n" else False
             else:
                 out_str += entry.process(self)
+                need_whitespace = False
         return out_str
 
 

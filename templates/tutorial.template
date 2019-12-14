@@ -1,58 +1,52 @@
-headline { Online Loop/While Interpreter }
+\headline { Online Loop/While Interpreter }
 
-tableofcontents
+\tableofcontents
 
-chapter { Syntax }
-    section { Basiskonstrukte }
-    text {
+\chapter { Syntax }
+    \section { Basiskonstrukte }
         Zu Beginn eines Programms werden die Ein- und Ausgabeparameter durch
-        die Schlüsselwörter } italic{in} text{ und } italic{out} text{ festgelegt.
-        Mit } italic{aux} text{ können zusätzliche Hilfsvariablen deklariert werden.
+        die Schlüsselwörter \italic{in} und \italic{out} festgelegt.
+        Mit \italic{aux} können zusätzliche Hilfsvariablen deklariert werden.
         Alle Variablen sind vom Typ der natürlichen Zahlen. Es stehen neben der Vorgänger-
-        und Nachfolgeroperation } italic {succ} text { und } italic { pred } text { die
-        arithmetischen Operatoren } italic {+} text {, } italic {-} text {, } italic {*}
-        text {, } italic {div} text { und } italic {mod} text { zur Verfügung.
-    }
-    linebreak
-    text {
-        Das nachfolgende Beispielprogramm liest einen Wert } italic{input} text { von
+        und Nachfolgeroperation \italic {succ} und \italic { pred } die
+        arithmetischen Operatoren \italic {+}, \italic {-}, \italic {*},
+        \italic {div} und \italic {mod} zur Verfügung.
+    \linebreak
+        Das nachfolgende Beispielprogramm liest einen Wert \italic{input} von
         der Eingabe, verdoppelt ihn und gibt ihn anschließend auf der Konsole aus:
-    }
-    linebreak
-    code{
+    \linebreak
+
+    \code{
 in: input;
 out: output;
 
 output := 2 * input;
     }
-    linebreak
-    text {
-        Die Vergleichsoperatoren } italic{<} text{, } italic{<=} text{, }
-        italic{==} text{, } italic{!=} text{, } italic{>=} text{, }
-        italic{>} text{ liefern als Ergebnis 1, wenn sie zu wahr, und 0,
+
+    \linebreak
+        Die Vergleichsoperatoren \italic{<}, \italic{<=},
+        \italic{==}, \italic{!=}, \italic{>=},
+        \italic{>} liefern als Ergebnis 1, wenn sie zu wahr, und 0,
         wenn sie zu falsch evaluiert werden.
-    }
-    linebreak
-    text {
+    \linebreak
         Das Programm im nachfolgenden Beispiel gibt aus, ob die Eingabe gerade
         ist oder nicht:
-    }
-    code{
+
+    \code{
 in: input;
 out: output;
 
 output := input mod 2;
     }
     
-    section { WHILE-Schleifen }
+    \section { WHILE-Schleifen }
     
-    section { LOOP-Schleifen }
-        text {
+    \section { LOOP-Schleifen }
             Um sicherzustellen, dass das vorliegende Programm nur loop-Schleifen
             verwenden darf, kann am Anfang des Programms das Sprachflag #LOOP
             gesetzt werden.
-        }
-        code{
+
+        \code{
 #LOOP
 in: x, y;
 out: z;
@@ -63,21 +57,18 @@ loop x do
 enddo
         }
         
-    section {Makros}
-    text {
+    \section {Makros}
         Makros ermöglichen die strukturierte Programmierung, indem gemeinsamer Code ausgelagert wird.
         Eine Makrodefinition besteht dabei aus dem Namen, der Deklaration der Eingangs-, Ausgangs-
         und Hilfsvariablen, sowie dem Code des Makros selbst. Alle Makros müssen noch vor den Parametern
         des Hauptprogramms definiert werden. Rekursion von Makros ist dabei nicht erlaubt.
-    }
-    linebreak
-    text {
-        Das folgende Beispiel demonstriert ein Makro } italic {multiply} text {, das die Multiplikation
+    \linebreak
+        Das folgende Beispiel demonstriert ein Makro \italic {multiply}, das die Multiplikation
         zweier natürlicher Zahlen realisiert:
-    }
-    linebreak
-    linebreak
-    code {
+    \linebreak
+    \linebreak
+
+    \code {
 def multiply
   in: x, y;
   out: z;
@@ -94,29 +85,23 @@ z := multiply(x, y)
     }
 
 
-chapter { Editor und Interpreter }
-    text {
+\chapter { Editor und Interpreter }
         Über das Editorfenster links oben können Loop/While Programme editiert werden.
         Der Editor bietet eine auf regulären Ausdrücken basierende farbige Syntaxhervorhebung,
         copy-and-paste Funktionalität über die gewohnten Tastenkombinationen des verwendeten
         Betriebssystems, sowie die Möglichkeit einer Vollbilddarstellung durch drücken der Taste
         F11.
-    }
-    linebreak
-    linebreak
-    text {
+    \linebreak
+    \linebreak
         Über das Terminalfenster links unten wird die Ausgabe des Interpreters dargestellt und
         Nutzereingaben entgegengenommen.
-    }
-    linebreak
-    linebreak
-    text {
+    \linebreak
+    \linebreak
         Editor und Interpreter können über die graue Menüleiste oberhalb des Editorfensters
         gesteuert werden, wie in nachfolgender Tabelle erklärt wird:
-    }
-    linebreak
-    linebreak
-    html {
+    \linebreak
+    \linebreak
+    \html {
         <table class="tutorialContainerTable">
         <tr><td><img src="img/icons/baseline_play_arrow_black_24dp.png" /></td>
             <td>Startet den Interpreter</td></tr>
@@ -132,10 +117,8 @@ chapter { Editor und Interpreter }
             <td>Speichert den aktuellen Inhalt des Editorfensters in eine lokale Datei</td></tr>
         </table>
     }
-chapter { Debugging}
 
-text
-{
+\chapter { Debugging}
     Nachdem in die Debuggeransicht gewechselt wurde, können Breakpoints durch klicken neben
     die entsprechende Zeilennummer gesetzt und wieder entfernt werden. Nachdem der Debugger
     gestartet und die Startparameter über das Terminalfenster belegt wurden, wird die Ausführung
@@ -144,11 +127,10 @@ text
     werden. Die Steuerung des Debuggers erfolgt analog zum Interpretermodus über die Menüleiste (siehe
     Tabelle unten). An Stelle des Terminalfensters erscheint während der Programmausführung eine Auflistung
     aller Variablenwerte.
-}
 
-linebreak
-linebreak
-html {
+\linebreak
+\linebreak
+\html {
         <table class="tutorialContainerTable">
         <tr><td><img src="img/icons/baseline_skip_next_black_24dp.png" /></td>
             <td>F&uuml;hrt die Ausf&uuml;hrung des Debuggers bis zum Erreichen des n&auml;chsten Breakpoints fort</td></tr>
