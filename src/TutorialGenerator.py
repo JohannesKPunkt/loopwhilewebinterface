@@ -8,8 +8,8 @@ _lexer_rules = [
     ('{',                                                      LBRAC),
     ('}',                                                      RBRAC),
     ('\s',                                                     WHITESPACE),
-    ('\\\\(\w+)',                                              COMMAND),
-    ('([\w,;\.:\-\+*/|<>~#\'"§$%\&\(\)=\?!]|\\\\)*',           STRING),
+    ('\\\\(\\\\|\w+)',                                         COMMAND),
+    ('([\w,;\.:\-\+*/|<>~#\'"§$%\&\(\)=\?!\[\]])*',            STRING),
 ]
 
 _token_map = {LBRAC: "'{'", RBRAC: "'}'", STRING: STRING, WHITESPACE: WHITESPACE, COMMAND: COMMAND}
@@ -89,6 +89,9 @@ class TutorialGenerator:
                               + str(counter) + "\">" + section + "</a><br />\n")
                     counter += 1
             return table
+
+    class Whitespace:
+        pass
 
     def _raise_parse_exception(self, pos, errmsg=None):
         raise ParserException(pos, self._input, errmsg)
@@ -170,10 +173,14 @@ class TutorialGenerator:
                         self._command_tableofcontents()
                     elif token.val == "\\html":
                         self._command_html()
+                    elif token.val == "\\nobr":
+                        self._command_nobr()
+                    elif token.val == "\\\\":
+                        self._command_backslash()
                     else:
                         self._raise_parse_exception(token.pos, "invalid command token: \"" + token.val + "\"")
                 elif token.type == WHITESPACE:
-                    pass
+                    self._output.append(self.Whitespace())
                 elif token.type == STRING:
                     self._output.append(html.escape(token.val))
                 else:
@@ -183,16 +190,20 @@ class TutorialGenerator:
             self._raise_parse_exception(e.pos, "invalid token")
 
         out_str = ""
-        need_whitespace = False
+        whitespace_occurred = False
         for entry in self._output:
+            if isinstance(entry, self.Whitespace):
+                whitespace_occurred = True
+                continue
+
+            if whitespace_occurred:
+                out_str += " "
+                whitespace_occurred = False
+
             if isinstance(entry, str):
-                if need_whitespace:
-                        out_str += " "
                 out_str += entry
-                need_whitespace = True if out_str[-1] != "\n" else False
             else:
                 out_str += entry.process(self)
-                need_whitespace = False
         return out_str
 
 
@@ -258,6 +269,14 @@ class TutorialGenerator:
     def _command_html(self):
         self._next_token(LBRAC)
         self._output.append(self._consume_until(RBRAC))
+
+    def _command_nobr(self):
+        self._next_token(LBRAC)
+        self._output.append("<span style=\"white-space: nowrap;\">"
+            + html.escape(self._consume_until(RBRAC)) + "</span>")
+
+    def _command_backslash(self):
+        self._output.append("\\")
 
 if __name__ == '__main__':
     try:
