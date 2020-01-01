@@ -39,8 +39,6 @@ if __name__ == '__main__':
 
 from Controller import Controller
 
-_port = 8080
-
 if __name__ == '__main__':
     # Run server
     config = MinimalApplicationConfigurator()
