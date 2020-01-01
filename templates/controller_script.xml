@@ -412,8 +412,7 @@ function open_file(event)
 
     reader.onloadend = function(evt)
     {
-        editor.setValue(evt.target.result);
-        editor.clearSelection();
+        set_editor_text(evt.target.result);
     }
     reader.readAsText(file);
 }
@@ -437,9 +436,10 @@ function handle_save_file()
 
 function set_editor_text(text)
 {
-    if(typeof editor != 'undefined')
+    if(current_mode == "interpreter")
     {
         editor.setValue(text);
+        editor.clearSelection();
     }
     else
     {
