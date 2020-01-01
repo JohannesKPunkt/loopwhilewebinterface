@@ -12,6 +12,7 @@ _global_handler = None
 
 def set_global_options(level, logfile):
     global _global_handler
+    global _global_log_level
     logging.basicConfig(format="%(asctime)-15s - %(name)s - %(levelname)s - %(message)s")
     if level is not None:
         _global_log_level = level
