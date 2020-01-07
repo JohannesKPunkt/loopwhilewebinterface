@@ -158,10 +158,10 @@
 .tutorialContainerTable {  width: 70%; margin: 0 auto; border-collapse:collapse;}
 .tutorialContainerTable td { border: 1px solid; }
 
-.tutorialContainer a:link { color: blue; }
-.tutorialContainer a:visited { color: blue; }
-.tutorialContainer a:hover { color: blue; }
-.tutorialContainer a:active { color: darkblue; }
+a:link { color: blue; }
+a:visited { color: blue; }
+a:hover { color: blue; }
+a:active { color: darkblue; }
 
 .tutorialContainer {
     width: 42%;
@@ -169,6 +169,15 @@
     float: right;
     background: grey;
     margin-right: 20px;
+    padding: 5px;
+    overflow: auto;
+}
+
+.centeredPage {
+    width: 80%;
+    max-height: 80%;
+    margin: auto;
+    background: grey;
     padding: 5px;
     overflow: auto;
 }

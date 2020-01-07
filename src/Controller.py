@@ -215,6 +215,10 @@ class Controller(TGController):
     def index(self, **kw):
         return self.interpreter()
 
+    @expose('templates/about.xhtml', content_type="text/html")
+    def about(self, **kw):
+        return {}
+
     # /interpreter is the main site of the interpreter mode
     @expose('templates/interpreter.xhtml', content_type="text/html")
     def interpreter(self, **kw):
