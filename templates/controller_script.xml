@@ -114,7 +114,8 @@ function check_termination()
                 }
 				if (this.responseText == "timeout")
 				{
-					alert("Timeout");
+					alert("Session timeout - Die maximale Sitzungsdauer (1 Minute im Interpretermodus bzw. 15 Minuten im Debuggermodus)"
+                          + " wurde überschritten.\nBitte starten Sie das Programm neu.");
 				}
 			}
 		}
