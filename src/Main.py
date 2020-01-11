@@ -4,7 +4,7 @@
 #
 #
 
-from wsgiref.simple_server import make_server
+import waitress
 from tg import MinimalApplicationConfigurator
 from tg.configurator.components.statics import StaticsConfigurationComponent
 
@@ -54,8 +54,7 @@ if __name__ == '__main__':
             }
         })
         logger.info("Listening on port " + str(_port) + ", host " + str(_host))
-        httpd = make_server(_host, _port, config.make_wsgi_app())
-        httpd.serve_forever()
+        waitress.serve(config.make_wsgi_app(), host=_host, port=_port)
     except KeyboardInterrupt:
         pass
     except Exception as e:
