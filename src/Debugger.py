@@ -233,7 +233,7 @@ class Debugger(Session):
     def set_breakpoint(self, line_no):
         self._send_cmd("setbreakpoint " +  str(line_no) + " " + self._input_file_name)
         resp = self._wait_for_debugger_response(TelegramType.BREAKPOINT_SET)
-        #logger.debug("line_no=" + str(line_no) + " type=" + str(type(line_no)) + ", resp.line_np=" + str(resp.line_no) + ", type=" + str(type(resp.line_no)))
+
         assert(line_no == resp.line_no)
         self._breakpoints.add(line_no)
 
@@ -284,7 +284,6 @@ class Debugger(Session):
         def consume_token(self):
             cur_token = self._token
             if self._token is not None and self._token.type == "LINEBREAK":
-                print("inc line")
                 self._line += 1
             try:
                 self._token = self._lexer.__next__()
@@ -322,19 +321,17 @@ class Debugger(Session):
 
         while tokenizer.has_token():
             token = tokenizer.consume_non_whitespace_token()
-            print(token)
+
             if token.type == "ENTER_COMMENT":
                 tokenizer.consume_until("LINEBREAK")
             if token.val == "def":
                 tokenizer.consume_until_value("enddef")
             elif token.val in ("in", "out", "aux"):
-                print("handle param decl")
-                print(tokenizer.consume_non_whitespace_token()) # colon
-                print(tokenizer.consume_non_whitespace_token()) # first parameter
+                tokenizer.consume_non_whitespace_token() # colon
+                tokenizer.consume_non_whitespace_token() # first parameter
                 while tokenizer.peek_token().val == ",":
                     tokenizer.consume_non_whitespace_token() # comma
                     tokenizer.consume_non_whitespace_token() # next parameter
-            #elif token.type in ("SPACE", "TAB", "COLON", "SEMICOLON", "LP", "RP"
             elif token.type == "IDENTIFIER":
                 break
 
