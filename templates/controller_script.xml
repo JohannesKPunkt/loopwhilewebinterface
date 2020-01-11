@@ -43,6 +43,7 @@ function handle_run_button()
 				else
 				{
 					session_id = id;
+                    open_websocket();
 				}
 			}
 			else if (this.readyState == 4)
@@ -53,9 +54,7 @@ function handle_run_button()
 		request.open("POST", "run", true);
 		request.timeout = 2000;
 		request.send(data);
-        switch_state("running")
-		window.reload_terminal_agent = setTimeout(reload_terminal, 500);
-		window.await_termination_agent = setInterval(check_termination, 500);
+        switch_state("running");
 		
 	}
 	else
@@ -88,42 +87,7 @@ function stop_interpreter()
     requesta.send(data);
 
     session_id = 0;
-    clearTimeout(window.reload_terminal_agent);
-    clearTimeout(window.await_termination_agent);
     switch_state("stopped");
-}
-
-function check_termination()
-{
-    button = document.getElementById("run_button");
-	var data = new FormData();
-	data.append("session_id", session_id);
-	var requesta = new XMLHttpRequest();
-	requesta.onreadystatechange = function()
-	{
-		if (this.readyState == 4 && this.status == 200)
-		{
-			if (this.responseText != "running")
-			{
-                clearInterval(window.await_termination_agent);
-                clearTimeout(window.reload_terminal_agent);
-				session_id = 0;
-                if(current_mode == "interpreter")
-                {
-                    switch_state("stopped");
-                }
-				if (this.responseText == "timeout")
-				{
-					alert("Session timeout - Die maximale Sitzungsdauer (1 Minute im Interpretermodus bzw. 15 Minuten im Debuggermodus)"
-                          + " wurde überschritten.\nBitte starten Sie das Programm neu.");
-				}
-			}
-		}
-		
-	};
-	requesta.open("POST", "check_termination", true);
-	requesta.timeout = 2000;
-	requesta.send(data);
 }
 
 function load_debugger()
@@ -188,7 +152,6 @@ function handle_debug_button()
 
 function handle_debug_close_button()
 {
-    clearInterval(window.await_termination_agent);
     handle_action("close");
 
     var editor_container = document.getElementById("editor_container");
@@ -243,102 +206,126 @@ function breakpoint_action(id)
      }
 }
 
-function check_debugger_state()
+
+function open_websocket()
 {
-    check_termination();
-    reload_terminal();
-    
-    //check if debugger stopped
-    var data = new FormData();
-	data.append("session_id", session_id);
-	var request = new XMLHttpRequest();
-	request.onreadystatechange = function()
-	{
-		if (this.readyState == 4 && this.status == 200)
-		{
-			if(this.responseText == "FAIL" || this.responseText == "DIED"
-               || this.responseText == "RESTARTED")
+    var conn = new WebSocket("${ws_host}");
+    conn.onopen = function() {
+        conn.send(session_id);
+    }
+    conn.onerror = function(error) {
+        session_id = 0;
+        if(current_mode == "interpreter")
+        {
+            switch_state("stopped");
+        }
+    }
+    conn.onmessage=function(e) {
+        var result = JSON.parse(e.data);
+        process_update(result);
+    }
+    conn.onclose = function() {
+        if(current_mode == "interpreter")
+        {
+            session_id = 0;
+            switch_state("stopped");
+        }
+    }
+}
+
+function process_update(result)
+{
+    if(result["status"] == "timeout")
+    {
+        alert("Session timeout - Die maximale Sitzungsdauer (1 Minute im Interpretermodus bzw. 15 Minuten im Debuggermodus)"
+            + " wurde überschritten.\nBitte starten Sie das Programm neu.");
+    }
+    if(result["terminal"] != "")
+    {
+        terminal_add_text(result["terminal"]);
+    }
+
+    if(current_mode == "debugger" && result["debugger"] != "")
+    {
+        var response = result["debugger"];
+        if(response == "FAIL" || response == "DIED"
+           || response == "RESTARTED")
+        {
+            if(active_line != "")
             {
-                if(active_line != "")
-                {
-                    var elem = document.getElementById(active_line);
-                    elem.setAttribute("class", "debuggerCodeViewLine");
-                    active_line = ""
-                }
-                
-                if(current_tab != "terminal_container")
-                {
-                    switch_tab("terminal_container");
-                }
-                current_state = "stopped";
-                clearInterval(window.await_termination_agent);
+                var elem = document.getElementById(active_line);
+                elem.setAttribute("class", "debuggerCodeViewLine");
+                active_line = ""
             }
-            else if(this.responseText != "None")
+
+            if(current_tab != "terminal_container")
             {
-                if(active_line != "")
-                {
-                    var elem = document.getElementById(active_line);
-                    elem.setAttribute("class", "debuggerCodeViewLine");
-                }
-                var strace = JSON.parse(this.responseText);
-                var line = strace[0]["line"];
-                var elem = document.getElementById("line" + line);
-                elem.setAttribute("class", "debuggerCodeViewLineActive");
-                active_line = "line" + line;
+                switch_tab("terminal_container");
+            }
+            current_state = "stopped";
+        }
+        else if(response != "None")
+        {
+            if(active_line != "")
+            {
+                var elem = document.getElementById(active_line);
+                elem.setAttribute("class", "debuggerCodeViewLine");
+            }
+            var strace = JSON.parse(response);
+            var line = strace[0]["line"];
+            var elem = document.getElementById("line" + line);
+            elem.setAttribute("class", "debuggerCodeViewLineActive");
+            active_line = "line" + line;
 
-                var codeView = document.getElementById("debuggerCodeView");
-                // only scroll to active line if it is not visible
-                if(codeView.scrollTop > elem.offsetTop ||
-                   codeView.scrollTop + codeView.offsetHeight < elem.offsetTop)
-                {
-                    elem.scrollIntoView();
-                }
+            var codeView = document.getElementById("debuggerCodeView");
+            // only scroll to active line if it is not visible
+            if(codeView.scrollTop > elem.offsetTop ||
+               codeView.scrollTop + codeView.offsetHeight < elem.offsetTop)
+            {
+                elem.scrollIntoView();
+            }
 
-                // remove old table
-                var table_node = document.getElementById("debugger_varview");
-                table_node.remove();
-                // create new table node
-                var varview_cont = document.getElementById("debugger_varview_container");
-                table_node = document.createElement("table");
-                table_node.setAttribute("id", "debugger_varview");
-                varview_cont.appendChild(table_node);
-                for(var frame_id in strace)
+            // remove old table
+            var table_node = document.getElementById("debugger_varview");
+            table_node.remove();
+            // create new table node
+            var varview_cont = document.getElementById("debugger_varview_container");
+            table_node = document.createElement("table");
+            table_node.setAttribute("id", "debugger_varview");
+            varview_cont.appendChild(table_node);
+            for(var frame_id in strace)
+            {
+                var frame = strace[frame_id];
+                var tr = document.createElement("tr");
+                var td = document.createElement("td");
+                tr.appendChild(td);
+                var macro_b = document.createElement("b");
+                macro_b.appendChild(document.createTextNode("macro"));
+                td.appendChild(macro_b);
+                var text = document.createTextNode(" " + frame["macro"]);
+                td.appendChild(text);
+
+                table_node.appendChild(tr);
+                for(var binding_id in frame["bindings"])
                 {
-                    var frame = strace[frame_id];
+                    var binding = frame["bindings"][binding_id];
                     var tr = document.createElement("tr");
                     var td = document.createElement("td");
                     tr.appendChild(td);
-                    var macro_b = document.createElement("b");
-                    macro_b.appendChild(document.createTextNode("macro"));
-                    td.appendChild(macro_b);
-                    var text = document.createTextNode(" " + frame["macro"]);
+                    var text = document.createTextNode("\u00A0\u00A0" + binding["VarType"] + " " + binding["Ident"] + ": " + binding["Val"]);
                     td.appendChild(text);
-                    
                     table_node.appendChild(tr);
-                    for(var binding_id in frame["bindings"])
-                    {
-                        var binding = frame["bindings"][binding_id];
-                        var tr = document.createElement("tr");
-                        var td = document.createElement("td");
-                        tr.appendChild(td);
-                        var text = document.createTextNode("\u00A0\u00A0" + binding["VarType"] + " " + binding["Ident"] + ": " + binding["Val"]);
-                        td.appendChild(text);
-                        table_node.appendChild(tr);
-                    }
-                }
-                
-                if(current_tab != "debugger_varview_container")
-                {
-                    switch_tab("debugger_varview_container");
                 }
             }
-		}
-		
-	};
-	request.open("POST", "debugger_poll_state", true);
-	request.timeout = 2000;
-	request.send(data);
+
+            if(current_tab != "debugger_varview_container")
+            {
+                switch_tab("debugger_varview_container");
+            }
+        }
+    }
 }
+
 
 function switch_tab(tabname)
 {
@@ -351,12 +338,12 @@ function switch_tab(tabname)
 
 function handle_continue_button()
 {
+    handle_action("continue");
     if (current_state == "stopped")
     {
         current_state = "running";
-		window.await_termination_agent = setInterval(check_debugger_state, 200);
+        open_websocket();
     }
-    handle_action("continue");
 }
 
 function handle_step_action(action)
@@ -364,8 +351,8 @@ function handle_step_action(action)
     if (current_state == "stopped")
     {
         current_state = "running";
-        window.await_termination_agent = setInterval(check_debugger_state, 200);
         handle_action("start");
+        open_websocket();
     }
     else
     {
@@ -396,7 +383,6 @@ function handle_action(action)
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function()
 	{
-        //TODO: do some error handling here?
 	};
 	request.open("POST", "debugger_action", true);
 	request.timeout = 2000;

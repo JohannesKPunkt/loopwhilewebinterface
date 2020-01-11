@@ -24,9 +24,10 @@ TUT_SCROLLBAR_POS = "tutorial_scrollbar_position"
 logger = Logging.get_logger(__name__)
 
 class Controller(TGController):
-    def __init__(self, src_path, max_sessions):
+    def __init__(self, src_path, max_sessions, ws_host):
         super().__init__()
         self._sess_man = SessionManager(src_path, max_sessions)
+        self._ws_host = ws_host
 
     def shutdown(self):
         self._sess_man.shutdown()
@@ -85,6 +86,7 @@ class Controller(TGController):
             return "An error occurred."
     
     # returns either "running", "terminated", "timeout" or "error"
+    # (deprecated with introduction of WebSockets)
     @expose(content_type="text/plain")
     def check_termination(self, **kw):
         try:
@@ -125,6 +127,7 @@ class Controller(TGController):
         except Exception as e:
             logger.error("remove_breakpoint(): Exception: " + traceback.format_exc())
 
+    # (deprecated with introduction of WebSockets)
     @expose(content_type="text")
     def debugger_poll_state(self, **kw):
         try:
@@ -191,7 +194,7 @@ class Controller(TGController):
         logger.debug("debugger(): using session_id=" + sess_id)
         session = self._sess_man.get_session(sess_id)
 
-        return DebuggerView(session.get_program_code())
+        return DebuggerView(session.get_program_code(), self._ws_host)
 
     # /start_debug_session starts a debugger session and returns a tuple "OK,<SESSION_ID>",
     # if the debugger process could be successfully started. If an error occurs, it returns
@@ -227,4 +230,4 @@ class Controller(TGController):
         except:
             program_code = None
 
-        return InterpreterView(program_code)
+        return InterpreterView(program_code, self._ws_host)
