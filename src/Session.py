@@ -9,6 +9,7 @@
 import Logging
 import threading
 import os, subprocess
+import fcntl
 
 from IOTools import read_timeout
 
@@ -28,6 +29,9 @@ _executable_path = "./lwre"
 #  is to perform a proper cleanup of the Sessions resources, i.e. to kill
 #  the underlying interpreter process, close connections and so on.
 #  
+#  For the WebSockets-based communication, a method get_file_descriptors()
+#  must be implemented, that returns a list of UNIX file descriptors to
+#  wait on (via select()) for events on that session.
 class Session:
     def __init__(self, sess_id, sess_manager):
         self._lock = threading.Lock()
@@ -42,8 +46,16 @@ class Session:
         self._proc.stdin.write((input_str + "\n").encode())
         self._proc.stdin.flush()
 
+    # poll process output with blocking only a short period of time
     def poll_user_output(self):
         return read_timeout(self._proc.stdout, timeout=0.15)
+
+    # poll process output without blocking at all
+    def fast_poll_user_output(self):
+        try:
+            return os.read(self._proc.stdout.fileno(), 512).decode()
+        except BlockingIOError:
+            return ""
 
     def get_program_code(self):
         input_file_path = self._sess_man.get_input_filename(self._sess_id)
@@ -76,6 +88,10 @@ class Session:
             logger.debug("create_process(): creating process with cmdline: " + str(callstr))
             self._proc = subprocess.Popen(callstr, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             logger.debug("create_process(): process with PID=" + str(self._proc.pid) + " created.")
+
+            # use non-blocking IO for process output
+            flags = fcntl.fcntl(self._proc.stdout.fileno(), fcntl.F_GETFL)
+            fcntl.fcntl(self._proc.stdout.fileno(), fcntl.F_SETFL, flags | os.O_NONBLOCK)
         except Exception as e:
             try:
                 os.remove(input_file_path)
