@@ -35,8 +35,9 @@ class DebuggerSourceCodeView(SourceCodeView):
 
 
 class DebuggerView(dict):
-    def __init__(self, code):
+    def __init__(self, code, ws_host):
         self["current_mode"] = "debugger"
+        self["ws_host"] = ws_host
         try:
             self["debugger_view_content"] = Markup(DebuggerSourceCodeView().get_source_code_view(code))
         except LexerError as e:

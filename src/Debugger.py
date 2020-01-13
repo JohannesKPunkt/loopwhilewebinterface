@@ -387,3 +387,6 @@ class Debugger(Session):
     @staticmethod
     def get_timeout():
         return DEBUGGER_TIMEOUT
+
+    def get_file_descriptors(self):
+        return [self._conn.fileno(), self._proc.stdout.fileno()]

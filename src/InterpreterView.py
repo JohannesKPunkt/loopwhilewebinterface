@@ -17,7 +17,7 @@ o0 := 42 * i0;
 """
 
 class InterpreterView(dict):
-    def __init__(self, program_code):
+    def __init__(self, program_code, ws_host):
         if program_code is not None:
             self["program_code"] = program_code
         else:
@@ -36,3 +36,4 @@ class InterpreterView(dict):
         self["current_mode"] = "interpreter"
         # starts with inactive session
         self["session_id"] = 0;
+        self["ws_host"] = ws_host
