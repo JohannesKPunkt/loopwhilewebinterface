@@ -337,7 +337,12 @@ class Debugger(Session):
 
         # set a temporary breakpoint
         self._start_line = tokenizer.cur_line()
-        self.set_breakpoint(self._start_line)
+        try:
+            self.set_breakpoint(self._start_line)
+        except DebuggerErrorMessage:
+            # if a breakpoint has already been set manually in this line,
+            # there is nothing to do in this method.
+            self._start_line = -1
 
         # run
         self.run()
