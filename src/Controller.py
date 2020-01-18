@@ -76,8 +76,12 @@ class Controller(TGController):
             # to poll the interpreter output
             if shell_input != "":
                 session.process_user_input(shell_input)
-
-            return session.poll_user_output()
+            try:
+                return session.poll_user_output()
+            except AttributeError:
+                # If the process terminates between process_user_input() and poll_user_output(),
+                # an Exception is thrown that should be ignored silently.
+                return ""
         except KeyError as e:
             logger.info("shell(): KeyError:" + str(e))
             return "An error occurred."
