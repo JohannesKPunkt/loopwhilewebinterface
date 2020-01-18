@@ -33,12 +33,16 @@ _executable_path = "./lwre"
 #  must be implemented, that returns a list of UNIX file descriptors to
 #  wait on (via select()) for events on that session.
 class Session:
-    def __init__(self, sess_id, sess_manager):
+    def __init__(self, sess_id, sess_manager, client_addr):
         self._lock = threading.Lock()
         self._sess_id = sess_id
         self._sess_man = sess_manager
         self._proc = None
+        self._client_addr = client_addr
         self.timer_task = None
+
+    def get_client_addr(self):
+        return self._client_addr
 
     def get_id(self):
         return self._sess_id

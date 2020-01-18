@@ -21,13 +21,15 @@ if __name__ == '__main__':
     # Process arguments
     try:
         arg_parser = ArgParser(sys.argv[1:], ["--host=", "--port=", "--loglevel=",
-            "--logfile=", "--user_src=", "--max_sessions=", "--ws_hostname=", "--ws_interface", "--ws_port"], True)
+            "--logfile=", "--user_src=", "--max_sessions=", "--ws_hostname=",
+            "--ws_interface=", "--ws_port=", "--max_sessions_per_address="], True)
         _host = arg_parser.get_value_default("--host", "127.0.0.1")
         _port = int(arg_parser.get_value_default("--port", "8080"))
         _loglevel = arg_parser.get_value_default("--loglevel", "INFO")
         _logfile = arg_parser.get_value_default("--logfile", None)
         _user_src = arg_parser.get_value_default("--user_src", "./user_src")
         _max_sessions = int(arg_parser.get_value_default("--max_sessions", "200"))
+        _max_sessions_per_addr = int(arg_parser.get_value_default("--max_sessions_per_address", "10"))
         _ws_host = arg_parser.get_value("--ws_hostname")
         _ws_interface = arg_parser.get_value_default("--ws_interface", "127.0.0.1")
         _ws_port = int(arg_parser.get_value_default("--ws_port", "8081"))
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     # Run server
     config = MinimalApplicationConfigurator()
     config.register(StaticsConfigurationComponent)
-    controller = Controller(_user_src, _max_sessions, _ws_host)
+    controller = Controller(_user_src, _max_sessions, _max_sessions_per_addr, _ws_host)
     try:
         config.update_blueprint({
             'root_controller': controller,

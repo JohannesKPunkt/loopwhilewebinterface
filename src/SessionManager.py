@@ -13,7 +13,7 @@ from Timer import Timer
 
 
 class SessionManager:
-    def __init__(self, src_path, max_sessions):
+    def __init__(self, src_path, max_sessions, max_sessions_per_addr):
         self._running_sessions = {0} #0 is an illegal session id
         self._last_session_id = 0
         self._lock = threading.Lock()
@@ -29,6 +29,9 @@ class SessionManager:
 
         # secure random number generator to generate session_ids
         self._randgen = random.SystemRandom()
+
+        self._sessions_per_addr = {}
+        self._max_sessions_per_addr = max_sessions_per_addr
 
     #  
     #  name: create_session
@@ -72,9 +75,16 @@ class SessionManager:
         self._timer.close_and_flush()
 
     # creates a interpreter or debugger session using the factory object factory
-    def create(self, factory, code):
+    def create(self, factory, code, client_address=None):
+        with self._lock:
+            if not client_address in self._sessions_per_addr:
+                self._sessions_per_addr[client_address] = 1
+            elif self._sessions_per_addr[client_address] >= self._max_sessions_per_addr:
+                raise RuntimeError("Too much open sessions for address " + client_address)
+            else:
+                self._sessions_per_addr[client_address] += 1
         session_id = self._create_session_id()
-        session = factory(code, session_id, self)
+        session = factory(code, session_id, self, client_address)
         timeout = session.get_timeout()
         with self._lock:
             self._session_map[session_id] = session
@@ -91,7 +101,9 @@ class SessionManager:
             session.timer_task = None
             session.close()
             del self._session_map[session_id]
-        
+            client_address = session.get_client_addr()
+            self._sessions_per_addr[client_address] -= 1
+
 
     # Returns the Session with session_id sess_id.
     # Raises KeyError, if no Session with that sess_id exists.

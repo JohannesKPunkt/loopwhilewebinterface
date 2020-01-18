@@ -59,8 +59,8 @@ logger = Logging.get_logger(__name__)
 
 
 class Debugger(Session):
-    def __init__(self, code, sess_id, session_manager):
-        super().__init__(sess_id, session_manager)
+    def __init__(self, code, sess_id, session_manager, client_addr=None):
+        super().__init__(sess_id, session_manager, client_addr)
         # set of line numbers (int) on which breakpoints are set
         self._breakpoints = set()
 

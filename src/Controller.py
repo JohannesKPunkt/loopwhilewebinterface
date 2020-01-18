@@ -4,7 +4,7 @@
 #
 #
 
-from tg import TGController, expose
+from tg import TGController, expose, request
 import traceback
 
 from SessionManager import SessionManager
@@ -24,9 +24,9 @@ TUT_SCROLLBAR_POS = "tutorial_scrollbar_position"
 logger = Logging.get_logger(__name__)
 
 class Controller(TGController):
-    def __init__(self, src_path, max_sessions, ws_host):
+    def __init__(self, src_path, max_sessions, max_sessions_per_addr, ws_host):
         super().__init__()
-        self._sess_man = SessionManager(src_path, max_sessions)
+        self._sess_man = SessionManager(src_path, max_sessions, max_sessions_per_addr)
         self._ws_host = ws_host
 
     def shutdown(self):
@@ -40,7 +40,7 @@ class Controller(TGController):
         try:
             logger.debug("run() called")
             program_code = kw[PROGRAM_CODE]
-            session = self._sess_man.create(Interpreter, program_code)
+            session = self._sess_man.create(Interpreter, program_code, request.client_addr)
             logger.debug("run(): new session_id=" + str(session.get_id()))
             return str(session.get_id());
         except Exception as e:
@@ -207,7 +207,7 @@ class Controller(TGController):
     def start_debug_session(self, **kw):
         logger.debug("start_debug_session() called")
         program_code = kw[PROGRAM_CODE]
-        session = self._sess_man.create(Debugger, program_code)
+        session = self._sess_man.create(Debugger, program_code, request.client_addr)
         logger.debug("start_debug_session(): new session_id=" + str(session.get_id()))
         if session.is_failed():
             logger.debug("start_debug_session(): process failed")

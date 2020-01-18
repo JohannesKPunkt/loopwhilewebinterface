@@ -12,8 +12,8 @@ INTERPRETER_TIMEOUT = 60
 logger = Logging.get_logger(__name__)
 
 class Interpreter(Session):
-    def __init__(self, code, session_id, session_manager):
-        super().__init__(session_id, session_manager)
+    def __init__(self, code, session_id, session_manager, client_addr):
+        super().__init__(session_id, session_manager, client_addr)
         self._create_process(code)
 
     def close(self):
