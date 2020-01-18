@@ -205,10 +205,12 @@ class LoopWhileWSConnection(WebSocketServerProtocol):
         if not self.closed:
             self.closed = True
             self.sendClose()
-            # terminate session immediately
+
+            # terminate session immediately if it will not be reused
             try:
                 session = sess_man.get_session(self.session_id)
-                sess_man.shutdown_session(session)
+                if not session.reuse_session():
+                    sess_man.shutdown_session(session)
             except Exception:
                 _logger.debug(traceback.format_exc())
 

@@ -34,5 +34,9 @@ class Interpreter(Session):
     def get_timeout():
         return INTERPRETER_TIMEOUT
 
+    @staticmethod
+    def reuse_session():
+        return False
+
     def get_file_descriptors(self):
         return [self._proc.stdout.fileno()]
