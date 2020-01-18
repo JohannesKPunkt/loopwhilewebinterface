@@ -78,12 +78,17 @@ class SessionManager:
         timeout = session.get_timeout()
         with self._lock:
             self._session_map[session_id] = session
-        self._timer.add_task(lambda : self._shutdown_session_handler(session_id), timeout)
+        task = self._timer.add_task(lambda : self._shutdown_session_handler(session_id), timeout)
+        session.timer_task = task
         return session
+
+    def shutdown_session(self, session):
+        self._timer.execute_immediately(session.timer_task)
 
     def _shutdown_session_handler(self, session_id):
         with self._lock:
             session = self._session_map[session_id]
+            session.timer_task = None
             session.close()
             del self._session_map[session_id]
         

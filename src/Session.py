@@ -38,6 +38,7 @@ class Session:
         self._sess_id = sess_id
         self._sess_man = sess_manager
         self._proc = None
+        self.timer_task = None
 
     def get_id(self):
         return self._sess_id

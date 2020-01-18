@@ -57,8 +57,18 @@ class Timer(threading.Thread):
     def add_task(self, action, rel_time):
         cur_time = time()
         with self._lock:
-            bisect.insort(self._queue, Timer.Task(action, cur_time + rel_time))
+            task = Timer.Task(action, cur_time + rel_time)
+            bisect.insort(self._queue, task)
             self._cond.notify()
+            return task
+
+    def execute_immediately(self, task):
+        with self._lock:
+            self._queue.remove(task)
+            try:
+                task.run()
+            except Exception as e:
+                logger.warning("Exception raised while running timer task: " + str(e))
 
     def close_and_flush(self):
         with self._lock:

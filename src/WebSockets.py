@@ -82,7 +82,7 @@ class WebSocketsService(Thread):
                         self._select_set.add(fd)
                         self._conn_map[fd] = conn
             except Exception:
-                conn.close()
+                conn.close(self._sess_man)
                 _logger.error(traceback.format_exc())
 
         def remove_connection(self, conn):
@@ -120,7 +120,7 @@ class WebSocketsService(Thread):
                 if message != conn.last_msg:
                     conn.sendMessage(message.encode("UTF8"), False)
                     if response["status"] != "running" or response["debugger"] == "RESTARTED":
-                        conn.close()
+                        conn.close(self._sess_man)
                         self.remove_connection(conn)
                         return
                 conn.last_msg = message
@@ -128,7 +128,7 @@ class WebSocketsService(Thread):
             except KeyError:
                 # session is closed or invalid
                 conn.sendMessage("{\"status\": \"timeout\", \"terminal\": \"\", \"debugger\": \"DIED\"}".encode("UTF8"), False)
-                conn.close()
+                conn.close(self._sess_man)
                 self.remove_connection(conn)
             except Exception:
                 _logger.error(traceback.format_exc())
@@ -174,7 +174,7 @@ class WebSocketsService(Thread):
                     except Exception:
                         _logger.info(traceback.format_exc())
                         try:
-                            conn.close()
+                            conn.close(self._sess_man)
                         except Exception:
                             _logger.debug(traceback.format_exc())
 
@@ -194,15 +194,23 @@ class LoopWhileWSConnection(WebSocketServerProtocol):
 
     def onMessage(self, payload, isBinary):
         if self.session_id is not None:
+            # A second message from client in one connection is a protocol error.
+            # In this case, we close the connection immediately.
             self.sendClose()
         else:
             self.session_id = payload.decode()
             _observer.add_connection(self)
 
-    def close(self):
+    def close(self, sess_man):
         if not self.closed:
             self.closed = True
             self.sendClose()
+            # terminate session immediately
+            try:
+                session = sess_man.get_session(self.session_id)
+                sess_man.shutdown_session(session)
+            except Exception:
+                _logger.debug(traceback.format_exc())
 
     def onClose(self, wasClean, code, reason):
         _logger.debug("Connection (session_id=" + str(self.session_id) + ") closed: " + str(reason))

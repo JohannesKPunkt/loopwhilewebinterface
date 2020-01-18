@@ -174,7 +174,7 @@ class Controller(TGController):
             elif action == "stepover":
                 session.step_over()
             elif action == "close":
-                session.close()
+                self._sess_man.shutdown_session(session)
             elif action == "start":
                 logger.debug("debugger_action(): calling session.run_and_stop_at_first_line()")
                 session.run_and_stop_at_first_line()
@@ -209,7 +209,7 @@ class Controller(TGController):
             logger.debug("start_debug_session(): process failed")
             terminal_output = session.poll_user_output()
             logger.debug("output was: " + terminal_output);
-            session.close();
+            self._sess_man.shutdown_session(session)
 
             return "FAIL," + terminal_output
         return "OK," + session.get_id()
