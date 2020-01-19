@@ -115,7 +115,7 @@ class WebSocketsService(Thread):
                     elif state is DebuggerState.NOTSTARTED:
                         response["debugger"] = "RESTARTED"
                     else:
-                        response["debugger"] = str(session.pop_last_stacktrace()).replace("\'", "\"")
+                        response["debugger"] = str(session.pop_last_stacktrace(False)).replace("\'", "\"")
                 message = json.dumps(response)
                 if message != conn.last_msg:
                     conn.sendMessage(message.encode("UTF8"), False)

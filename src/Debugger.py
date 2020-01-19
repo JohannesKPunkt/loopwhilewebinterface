@@ -223,8 +223,9 @@ class Debugger(Session):
         return self._last_stacktrace
 
     # returns last received stacktrace and resets it to None
-    def pop_last_stacktrace(self):
-        self._process_telegrams()
+    def pop_last_stacktrace(self, load_telegrams=True):
+        if load_telegrams:
+            self._process_telegrams()
         st = self._last_stacktrace
         self._last_stacktrace = None
         return st

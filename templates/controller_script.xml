@@ -354,13 +354,37 @@ function handle_continue_button()
     }
 }
 
+function run_and_stop_at_first_line()
+{
+    var data = new FormData();
+	data.append("session_id", session_id);
+	data.append("action", "start");
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function()
+	{
+        if (this.readyState == 4 && this.status == 200)
+        {
+            if (this.responseText == "OK")
+            {
+                current_state = "running";
+                open_websocket();
+            }
+            else
+            {
+                alert("Unexpected server-side error");
+            }
+        }
+	};
+	request.open("POST", "debugger_action", true);
+	request.timeout = 2000;
+	request.send(data);
+}
+
 function handle_step_action(action)
 {
     if (current_state == "stopped")
     {
-        current_state = "running";
-        handle_action("start");
-        open_websocket();
+        run_and_stop_at_first_line();
     }
     else
     {
