@@ -9,6 +9,7 @@ from tg import MinimalApplicationConfigurator
 from tg.configurator.components.statics import StaticsConfigurationComponent
 
 import sys
+import os
 
 import Logging
 from ArgParser import ArgParser
@@ -48,6 +49,11 @@ from WebSockets import WebSocketsService
 import ReportGenerator
 
 if __name__ == '__main__':
+    # Write PID file for stop.sh script
+    pid = os.getpid()
+    with open("pid", "w") as pidfile:
+        pidfile.write(str(pid))
+
     # setup ReportGenerator
     ReportGenerator.setup(_report_file)
 
