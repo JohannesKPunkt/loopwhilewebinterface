@@ -10,6 +10,7 @@ import threading
 import random
 
 from Timer import Timer
+import ReportGenerator
 
 
 class SessionManager:
@@ -90,6 +91,7 @@ class SessionManager:
             self._session_map[session_id] = session
         task = self._timer.add_task(lambda : self._shutdown_session_handler(session_id), timeout)
         session.timer_task = task
+        ReportGenerator.logSessionBegin(client_address, session_id)
         return session
 
     def shutdown_session(self, session):
@@ -103,6 +105,7 @@ class SessionManager:
             del self._session_map[session_id]
             client_address = session.get_client_addr()
             self._sessions_per_addr[client_address] -= 1
+            ReportGenerator.logSessionEnd(client_address, session_id)
 
 
     # Returns the Session with session_id sess_id.

@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # Process arguments
     try:
         arg_parser = ArgParser(sys.argv[1:], ["--host=", "--port=", "--loglevel=",
-            "--logfile=", "--user_src=", "--max_sessions=", "--ws_hostname=",
+            "--logfile=", "--user_src=", "--max_sessions=", "--ws_hostname=", "--report_file=",
             "--ws_interface=", "--ws_port=", "--max_sessions_per_address="], True)
         _host = arg_parser.get_value_default("--host", "127.0.0.1")
         _port = int(arg_parser.get_value_default("--port", "8080"))
@@ -33,6 +33,7 @@ if __name__ == '__main__':
         _ws_host = arg_parser.get_value("--ws_hostname")
         _ws_interface = arg_parser.get_value_default("--ws_interface", "127.0.0.1")
         _ws_port = int(arg_parser.get_value_default("--ws_port", "8081"))
+        _report_file = arg_parser.get_value("--report_file")
     except Exception as e:
         print("Exception while parsing arguments: " + str(e))
         sys.exit(-1)
@@ -44,8 +45,12 @@ if __name__ == '__main__':
 
 from Controller import Controller
 from WebSockets import WebSocketsService
+import ReportGenerator
 
 if __name__ == '__main__':
+    # setup ReportGenerator
+    ReportGenerator.setup(_report_file)
+
     # Run server
     config = MinimalApplicationConfigurator()
     config.register(StaticsConfigurationComponent)
