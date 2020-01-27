@@ -53,7 +53,7 @@ class DebuggerState(Enum):
     DIED = 3
 
 _socket_manager = SocketManager(10000, 20000)
-DEBUGGER_TIMEOUT = 5*60
+DEBUGGER_TIMEOUT = 15*60
 DEBUGGER_ACCEPT_TIMEOUT = 0.75
 logger = Logging.get_logger(__name__)
 
