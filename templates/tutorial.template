@@ -3,6 +3,7 @@
 \tableofcontents
 
 \chapter { Syntax und Semantik }
+    Die hier verwendete Loop/While-Sprache folgt der Syntax von M. Gebhard \link{#cite1}{[1]}.
     \section { Basiskonstrukte }
         Zu Beginn eines Programms werden die Ein- und Ausgabeparameter durch
         die Schlüsselwörter \italic{in} und \italic{out} festgelegt.
@@ -93,7 +94,7 @@ enddo
         \linebreak
         Die bisher beschriebene Teilmenge der Loop/While-Sprache ist bereits Turing-Mächtig,
         d.h. für jedes berechenbare Problem existiert auch ein Algorithmus in dieser Sprache
-        \link{#cite1}{[1]}.
+        \link{#cite2}{[2]}.
     
     \section { loop-Schleifen }
             Ein anderes Schleifenkonstrukt ist die loop-Schleife. Die Schleife
@@ -111,7 +112,7 @@ enddo
             \linebreak
             Jede solche loop-Schleife kann durch eine äquivalente while-Schleife ersetzt werden, jedoch
             gilt die Umkehrung dieser Aussage nicht, was zur Folge hat, dass die Loop/While-Sprache ohne while-Schleifen
-            nicht Turing-Mächtig (sondern lediglich gleichmächtig zur Primitiven Rekursion ist) \link{#cite1}{[1]}.
+            nicht Turing-Mächtig (sondern lediglich gleichmächtig zur Primitiven Rekursion ist) \link{#cite2}{[2]}.
             \linebreak
             Um sicherzustellen, dass das vorliegende Programm nur loop-Schleifen
             verwenden darf, kann am Anfang des Programms das Sprachflag #LOOP
@@ -214,4 +215,7 @@ z := multiply(x, y)
     }
 
 \chapter{Literatur}
-    \html{<span id="cite1">[1] Dirk W. Hoffmann. Theoretische Informatik. Carl Hanser Verlag, München, 2018.</span>}
+    \html{<span id="cite1">[1] Michael Gebhard. <a href="https://www8.cs.fau.de/_media/tools:thesis22NOvfinal.pdf">Development
+        of a Programming Environment and Interpreter for LOOP and WHILE.</a>
+        Bachelor Thesis in Computer Science. Friedrich-Alexander Universität Erlangen-Nürnberg, 2018.</span>}
+    \html{<span id="cite2">[2] Dirk W. Hoffmann. Theoretische Informatik. Carl Hanser Verlag, München, 2018.</span>}
