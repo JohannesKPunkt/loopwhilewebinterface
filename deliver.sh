@@ -18,7 +18,7 @@ echo "build tutorial"
 python3 src/TutorialGenerator.py --infile=$INSTALL_DIR/templates/tutorial.template --outfile=$INSTALL_DIR/templates/tutorial_container.xml
 
 echo "copy web dir"
-cp -r web/ $HTTPD_DIR
+cp -r web/* $LW_HTTPD_DIR
 
 echo "create user source dir if not existent"
 mkdir -p $USER_SRC_DIR

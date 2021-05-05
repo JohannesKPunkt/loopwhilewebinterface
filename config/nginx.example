@@ -66,6 +66,9 @@ server {
     location /purecss/ {
         root /var/www/html/;
     }
+    location /themes/ {
+        root /var/www/html/;
+    }
 
     location /lwservice/ {
         proxy_pass http://websocket;
