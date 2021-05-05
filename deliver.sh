@@ -1,30 +1,35 @@
 #!/bin/bash
 
-USER="loopwhile"
-GROUP=$USER
-INSTALL_DIR="/opt/loopwhile/"
-USER_SRC_DIR="/tmp/loopwhile_user_src/"
-HTTPD_DIR="/var/www/html/"
+set -e
+
+# Import settings
+source settings.sh
 
 echo "copy python sources"
-cp -r src/ "$INSTALL_DIR/"
-chown $USER:$GROUP "$INSTALL_DIR/src/."
+cp -r src/ "$LW_INSTALL_DIR/"
+chown $LW_USER:$LW_GROUP "$LW_INSTALL_DIR/src/."
+chown $LW_USER:$GROUP $LW_INSTALL_DIR
 
 echo "copy templates"
-cp -r templates/ "$INSTALL_DIR/"
-chown $USER:$GROUP "$INSTALL_DIR/templates/."
+cp -r templates/ "$LW_INSTALL_DIR/"
+chown $LW_USER:$LW_GROUP "$LW_INSTALL_DIR/templates/."
 
 echo "build tutorial"
-python3 src/TutorialGenerator.py --infile=$INSTALL_DIR/templates/tutorial.template --outfile=$INSTALL_DIR/templates/tutorial_container.xml
+python3 src/TutorialGenerator.py --infile=$LW_INSTALL_DIR/templates/tutorial.template --outfile=$LW_INSTALL_DIR/templates/tutorial_container.xml
 
 echo "copy web dir"
 cp -r web/* $LW_HTTPD_DIR
 
 echo "create user source dir if not existent"
-mkdir -p $USER_SRC_DIR
-chown $USER:$GROUP $USER_SRC_DIR
+mkdir -p $LW_USER_SRC_DIR
+chown $LW_USER:$GROUP $LW_USER_SRC_DIR
+
+echo "create log dir if not existent"
+mkdir -p $LW_LOG_DIR
+chown $LW_USER:$GROUP $LW_LOG_DIR
 
 echo "copy binary and scripts"
-cp lwre $INSTALL_DIR/
-cp run.sh $INSTALL_DIR/
-cp stop.sh $INSTALL_DIR/
+cp lwre $LW_INSTALL_DIR/
+cp settings.sh $LW_INSTALL_DIR/
+cp run.sh $LW_INSTALL_DIR/
+cp stop.sh $LW_INSTALL_DIR/
