@@ -3,9 +3,6 @@
 # Changing these settings might require a reinstall!
 
 
-# URL of the web service
-export LW_WEBSOCKETS_URL="127.0.0.1"
-
 # Log level
 export LW_LOG_LEVEL="DEBUG"
 

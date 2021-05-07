@@ -26,10 +26,9 @@ _logger = Logging.get_logger(__name__)
 _observer = None
 
 class WebSocketsService(Thread):
-    def __init__(self, sess_man, host, interface, port):
+    def __init__(self, sess_man, interface, port):
         global _observer
         super().__init__()
-        self.host = host
         self.port = port
         self.interface = interface
         _observer = self.Observer(sess_man)
@@ -38,7 +37,7 @@ class WebSocketsService(Thread):
         try:
             log.PythonLoggingObserver(__name__).start()
 
-            factory = WebSocketServerFactory("ws://" + self.host + ":" + str(self.port))
+            factory = WebSocketServerFactory()
             factory.protocol = LoopWhileWSConnection
 
             _observer.start()

@@ -6,6 +6,7 @@
 
 from tg import TGController, expose, request
 import traceback
+import re
 
 from SessionManager import SessionManager
 from IOTools import read_timeout
@@ -24,10 +25,13 @@ TUT_SCROLLBAR_POS = "tutorial_scrollbar_position"
 logger = Logging.get_logger(__name__)
 
 class Controller(TGController):
-    def __init__(self, src_path, max_sessions, max_sessions_per_addr, ws_host):
+    def __init__(self, src_path, max_sessions, max_sessions_per_addr):
         super().__init__()
         self._sess_man = SessionManager(src_path, max_sessions, max_sessions_per_addr)
-        self._ws_host = ws_host
+        self._host_parser = re.compile(r"http[s]?://([a-zA-Z0-9._-]*)")
+
+    def get_ws_host(self):
+        return "ws://" + self._host_parser.match(request.application_url).group(1) + "/lwservice/"
 
     def shutdown(self):
         self._sess_man.shutdown()
@@ -198,7 +202,7 @@ class Controller(TGController):
         logger.debug("debugger(): using session_id=" + sess_id)
         session = self._sess_man.get_session(sess_id)
 
-        return DebuggerView(session.get_program_code(), self._ws_host)
+        return DebuggerView(session.get_program_code(), self.get_ws_host())
 
     # /start_debug_session starts a debugger session and returns a tuple "OK,<SESSION_ID>",
     # if the debugger process could be successfully started. If an error occurs, it returns
@@ -234,4 +238,4 @@ class Controller(TGController):
         except:
             program_code = None
 
-        return InterpreterView(program_code, self._ws_host)
+        return InterpreterView(program_code, self.get_ws_host())

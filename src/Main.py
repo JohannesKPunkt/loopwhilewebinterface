@@ -31,7 +31,7 @@ if __name__ == '__main__':
         _user_src = arg_parser.get_value_default("--user_src", "./user_src")
         _max_sessions = int(arg_parser.get_value_default("--max_sessions", "200"))
         _max_sessions_per_addr = int(arg_parser.get_value_default("--max_sessions_per_address", "10"))
-        _ws_host = arg_parser.get_value("--ws_hostname")
+        _ws_host = arg_parser.get_value_default("--ws_hostname", None)
         _ws_interface = arg_parser.get_value_default("--ws_interface", "127.0.0.1")
         _ws_port = int(arg_parser.get_value_default("--ws_port", "8081"))
         _report_file = arg_parser.get_value("--report_file")
@@ -49,6 +49,8 @@ from WebSockets import WebSocketsService
 import ReportGenerator
 
 if __name__ == '__main__':
+    if _ws_host is not None:
+        logger.info("Note: option --ws_hostname is deprecated")
     # Write PID file for stop.sh script
     pid = os.getpid()
     with open("pid", "w") as pidfile:
@@ -60,7 +62,7 @@ if __name__ == '__main__':
     # Run server
     config = MinimalApplicationConfigurator()
     config.register(StaticsConfigurationComponent)
-    controller = Controller(_user_src, _max_sessions, _max_sessions_per_addr, _ws_host)
+    controller = Controller(_user_src, _max_sessions, _max_sessions_per_addr)
     try:
         config.update_blueprint({
             'root_controller': controller,
@@ -72,7 +74,7 @@ if __name__ == '__main__':
         })
         logger.info("Listening on port " + str(_port) + ", host " + str(_host))
 
-        serv = WebSocketsService(controller._sess_man, _ws_host, _ws_interface, _ws_port)
+        serv = WebSocketsService(controller._sess_man, _ws_interface, _ws_port)
         serv.start()
 
         waitress.serve(config.make_wsgi_app(), host=_host, port=_port)
