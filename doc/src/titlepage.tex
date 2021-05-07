@@ -1,0 +1,40 @@
+\begin{titlepage}
+\newcommand{\drop}{0.07\textheight}
+\begin{center}
+\begingroup%
+\vfill
+{\LARGE\textsc{%
+Friedrich-Alexander-Universität\\[2mm]
+Erlangen-Nürnberg%
+}}\\[\drop]
+{%
+% trim= left bottom right top
+\includegraphics[height=1.8cm,trim=0cm 0mm 0 0mm]{img/tcs}\\
+\textsc{\large Chair for Computer Science 8}\\
+\textsc{\large Theoretical Computer Science}}%\\[\drop]
+\vfill
+\rule{\textwidth}{1pt}\par
+\vspace{0.5\baselineskip}
+{% maybe \itshape?
+  \Huge\bfseries
+  \makeatletter
+  \@title \\[1cm]
+  \makeatother
+\large\bfseries
+Documentation and installation manual
+}\\[0.5\baselineskip]
+\rule{\textwidth}{1pt}\par
+\vfill
+{\Large{\makeatletter\@author\makeatother}
+  %\\ {\large\normalsize{maybe-ur-mail@example.org}}
+}
+\vfill
+% trim= left bottom right top
+\includegraphics[height=1.8cm,trim=0cm -5mm 0 0mm]{img/fau}
+\vfill
+{\large Erlangen, \today}
+\endgroup
+\end{center}
+\end{titlepage}
+
+% vim: tw=80 spell spelllang=en nocul

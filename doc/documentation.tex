@@ -1,0 +1,97 @@
+\documentclass[a4paper,11pt,twopage,numbers=noenddot]{scrbook}
+
+\usepackage[top=2cm,lmargin=1in,rmargin=1in,bottom=3cm,hmarginratio=1:1]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{fancyvrb}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{ifthen}
+\usepackage{xspace}
+\usepackage{hyperref}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{listings}
+%\usepackage[right]{showlabels}
+%\usepackage[justific=raggedright,totoc]{idxlayout}
+
+\addto\extrasenglish{%
+  \renewcommand{\chapterautorefname}{Section}
+  \renewcommand{\sectionautorefname}{Section}
+  \renewcommand{\subsectionautorefname}{Subsection}
+  }
+
+\newcommand\chap[1]{%
+  \chapter*{#1}%
+  \chaptermark{#1}%
+  \addcontentsline{toc}{chapter}{#1}}
+
+\declaretheorem[name=Definition,style=definition,numberwithin=chapter]{definition}
+\declaretheorem[name=Example,style=definition,sibling=definition]{example}
+\declaretheorem[style=definition,numbered=no]{exercise}
+\declaretheorem[name=Remark,style=definition,sibling=definition]{remark}
+\declaretheorem[name=Assumption,style=definition,sibling=definition]{assumption}
+\declaretheorem[name=Observation,style=definition,sibling=definition]{observation}
+\declaretheorem[name=Theorem,sibling=definition]{theorem}
+\declaretheorem[sibling=definition]{corollary}
+\declaretheorem[name=Fact,sibling=definition]{fact}
+\declaretheorem[sibling=definition]{lemma}
+\declaretheorem[sibling=lemma]{proposition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%                   Spacing settings                                      %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\marginparsep}{0cm}
+
+\title{Interactive web interface for the Loop/While interpreter}
+
+\author{Johannes Kern}
+
+\makeatletter
+\hypersetup{
+  pdftex,
+  pdfauthor={\@author},
+  pdftitle={\@title},
+  % kill those ugly red rectangles around links
+  hidelinks,
+}
+\makeatother
+
+\usepackage{newunicodechar}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{ø}{\ensuremath{\emptyset}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊗}{\ensuremath{\otimes}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+
+
+\usepackage{tikz}
+\usetikzlibrary[topaths,positioning,calc,arrows,automata,cd]
+
+\usepackage{float} %enables float option 'H' for figure etc.
+
+\bibliographystyle{alpha}
+\begin{document}
+\pagestyle{plain}
+\input{src/titlepage}%
+\tableofcontents
+%\include{src/examples}
+\include{src/overview}
+\include{src/installation}
+\include{src/configuration}
+\bibliography{literature}
+\end{document}
+
+% vim: tw=80 nospell spelllang=en nocul

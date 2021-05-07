@@ -1,0 +1,191 @@
+\chapter{Installation and configuration}
+\section{Requirements}
+We assume, that there is a Linux-based system (e.g. Ubuntu or Debian) with at least Python 3.5 installed. TurboGears and other prerequisites can
+be installed by the package-management system of Python (depending on your installation, you might need the command pip3 instead of pip for Python 3):
+
+\begin{verbatim}
+pip install TurboGears2 genshi transaction waitress autobahn[twisted,accelerate]
+\end{verbatim}
+
+This manual expects also an installed nginx web server, but usage of other web servers like Apache httpd\footnote{https://httpd.apache.org/}
+should be possible without problems.
+
+The Loop/While Interpreter binary is expected to be compiled separately from the branch
+\mbox{'webinterface'} of the repository\\
+%\url{https://git8.cs.fau.de/theses/michael-gebhard-ba/loopwhile-yacc-interpreter}.
+\url{https://git8.cs.fau.de/software/loopwhile-yacc-interpreter}.
+
+
+\section{Installation}
+\label{section:installation}
+There is a script \verb|deliver.sh| in the repository, that does most of the necessary
+steps automatically. The variables used in this script can be adjusted:
+
+\begin{tabular}{@{}l l}
+\verb|USER|, \verb|GROUP| & the user- and group name that gets owner of the installation directories\\
+                          & and which are running the daemon \\
+\verb|INSTALL_DIR|        & directory in which the Python-based backend will be installed \\
+\verb|USER_SRC_DIR|       & directory used to create temporary files. This directory must be exclusively\\
+                          & used by the backend \\
+\verb|HTTPD_DIR|          & directory to which all files are copied that will be directly served by nginx\\
+                          & or Apache httpd\\
+\end{tabular}
+
+After this script is executed, all necessary files are placed to their correct location.
+
+The next step is to set up the web server. An example configuration for nginx can be found
+in the repository under \verb|config/nginx.example|. This file must be copied to\\ \verb|/etc/nginx/sites_available|,
+and a symlink to this copy must be placed under\\ \verb|/etc/nginx/sites_enabled|. In this configuration, requests to
+the HTTP backend are delegated to the port 8080 and requests to the WebSockets backend get delegated to port 8081.
+Furthermore, the configuration ensures, that the original client IP address is transmitted in the request header to
+the respective backend to enable further request filtering there.
+
+The last step is to set up a daemon for the backend. An example configuration file for systemd is found in the
+repository under \verb|config/lw.service|. This file must be copied to \verb|/etc/systemd/system/lw.service|
+and the settings for \verb|User|, \verb|ExecStart| and \verb|WorkingDirectory| have to be adjusted.
+To configure the lw service itself, the URL for the WebSockets service in the \verb|--ws_hostname| option has to be
+adjusted in the run script (see section \ref{section:config}).
+The daemon can then be started by
+\begin{verbatim}
+sudo systemctl start lw
+\end{verbatim}
+To start the service automatically on boot, you have to enable it:
+\begin{verbatim}
+sudo systemctl enable lw
+\end{verbatim}
+
+\section{Configuration and run script}
+\subsection{Overview}
+\label{section:config}
+The entry point of the backend daemon in the \verb|run.sh| script. In this script, some basic
+parameters can be set:
+
+\begin{tabular}{@{}l l}
+\verb|--logile=<PATH>|                          & Path to the logfile that shall be generated.\\
+                                                             & A RotatingFileLogger is used.\\
+\verb|--loglevel=<LEVEL>|                       & Level used for logging. The higher the level, the more\\
+                                                             & verbose the logging.\\
+                                                             & Available levels are: CRITICAL, ERROR, WARNING,\\
+                                                             & INFO, DEBUG, NOTSET. Default is INFO.\\
+\verb|--host=<HOST_ADDR>|        & Address on which the backend listens on. It is strongly\\
+                                                             & recommended to use 127.0.0.1 here, so that the backend\\
+                                                             &  itself is only reachable by the upstream web server.\\
+\verb|--port=<PORT>|                           & Port the backend listens on\\
+\verb|--user_src=<PATH>|         & Path to the directory for temporary files\\
+\verb|--max_sessions=<LIMIT>|  & Maximal number of sessions, i.e. concurrent instances\\
+                                                             & of the lwre binary\\
+\verb|--ws_hostname=<URL>|       & URL of the WebSockets service\\
+\verb|--ws_interface=<URL>|      & Address on which the WebSockets service listens on.\\
+                                                             & It is strongly recommended to use 127.0.0.1 here.\\
+\verb|--ws_post=<URL>|           & Port the WebSockets service listens on\\
+\verb|--report_file=<PATH>|           & File to which report data will be written\\
+\verb|--max_sessions_per_addr=<LIMIT>|           & Maximal number of sessions per IP address\\
+\end{tabular}
+
+For testing purposes, the \verb|run.sh| script can also be executed directly without running the install routines.
+
+\subsection{Security and performance}
+The nginx settings in \verb|config/| do not use HTTPS at all. However, it is strongly recognized
+to set up the server such that it is only reachable by HTTPS.
+
+Performance tests on a virtual server with 2 virtual CPUs and 2GB of RAM showed, that the application is able to handle over 128 parallel debugging
+sessions without recognizable impact to the response times. Nevertheless, the maximal number of parallel sessions is
+limited by
+\begin{itemize}
+    \item the maximal number of processes allowed by the operating system
+    \item the maximal number of open files in the server process
+    \item the limit configured using the \verb|--max_sessions| option (see Section \ref{section:config}).
+\end{itemize}
+
+The limits of the operating system can be obtained by the shell command \verb|ulimit -a|.
+For the lw server daemon, they can be adjusted if necessary by adding the following two lines
+in the systemd service file (\verb|/etc/systemd/system/lw.service|):
+\begin{verbatim}
+[Service]
+...
+LimitNOFILE=20000
+LimitNOFILESoft=20000
+LimitNPROC=20000
+LimitNPROCSoft=20000
+\end{verbatim}
+
+To reduce the risk of (distributed) DoS attacks, it is
+possible to establish a limit of parallel sessions per IP address, using the \verb|--max_sessions_per_address| option.
+To determine a suitable limit, the report generator is a useful tool (see Section \ref{section:reportgen}).
+
+Another way is to restrict the maximal number of TCP connections per time unit in the firewall (using iptables).
+
+\subsection{Report generator}
+\label{section:reportgen}
+The report generator can be used to generate certain usage statistics. It writes status data at runtime to a
+file that is specified by the \verb|--report_file| argument. The data contained in this file is persistent
+even after restarts of the server daemon.
+
+To generate statistics, you have to call the respective Python script:
+\begin{verbatim}
+python3 src/ReportGenerator.py --infile=<PATH>
+\end{verbatim}
+This script uses different metrics and can easily be extended.
+
+
+\section{Tutorial generator}
+The tutorial is generated using an own simple markup language, that provides some basic features
+for text formatting and syntax highlighting for code snippets. A tutorial template according
+to this markup language is a sequence of text and commands described in the following table.
+Commands start with a backslash and cannot be nested. To be used in text, the backslash is escaped
+by double backslash.
+
+\begin{tabular}{@{}l | l}
+\textit{\textbackslash headline \{ \textless text\textgreater\space \} } & headline of the tutorial\\
+\textit{\textbackslash tableofcontents} & a table of contents which is generated\\
+                         & automatically\\
+\textit{\textbackslash code \{ \textless code\textgreater\space \} } & syntax highlighted view of a given\\
+                                                & LOOP/WHILE code\\
+\textit{\textbackslash html \{ \textless text\textgreater\space \} } & HTML code that gets directly embedded\\
+        \begin{tabular}{@{}l l}
+        \textit{\textbackslash link} &\{ \textless target\textunderscore url\textgreater\space \}\\
+                      &\{ \textless link\textunderscore text\textgreater\space \}
+        \end{tabular} 
+       &\begin{tabular}{@{}l}
+        a link to \textless target\textunderscore url\textgreater\space\\\space\\
+        \end{tabular}\\
+\textit{\textbackslash nobr \{ \textless text\textgreater\space \} } & A piece of text that should not contain a line break
+\end{tabular}
+
+The other commands are self-explanatory:\\
+\textit{\textbackslash chapter \{ \textless text\textgreater\space \} },
+\textit{\textbackslash section \{ \textless text\textgreater\space \} },\\
+\textit{\textbackslash bold \{ \textless text\textgreater\space \} },
+\textit{\textbackslash italic \{ \textless text\textgreater\space \} },
+\textit{\textbackslash linebreak}
+
+The Tutorial Generator is started by just running the corresponding Python
+source file, specifying input and output file on the command line:
+\begin{verbatim} 
+python3 src/TutorialGenerator.py --infile=<TEMPLATE_FILE> --outfile=<OUTPUT_PATH>
+\end{verbatim}
+This script is usually executed automatically by the \verb|deliver.sh| script
+described in section~\ref{section:installation}, expecting the tutorial template in
+\verb|templates/tutorial.template|. It will place the output in 
+\verb|templates/tutorial_container.xml|.
+%\newpage
+Example:
+\lstset{basicstyle=\footnotesize}
+\begin{lstlisting}[frame=single]
+\headline{Headline of the Tutorial}
+\tableofcontents
+\chapter{example chapter}
+  \section{example section}
+    This is normal text.
+    \bold{This is bold text.}
+    \italic{This is italic text.}
+    \linebreak
+    \link{http://example.com}{This is a link.}
+    \code{
+//This is a Loop/While code snippet
+in: i0
+out: o0
+
+o0 := i0
+    }
+\end{lstlisting}
