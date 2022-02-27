@@ -1,4 +1,4 @@
-# This file contains the configuration of the 
+# This file contains the configuration of the
 # loopwhile interactive interpreter service.
 # Changing these settings might require a reinstall!
 
@@ -16,16 +16,16 @@ export LW_MAX_SESSIONS_PER_ADDRESS="20"
 
 # User and group of the service deamon
 export LW_USER="loopwhile"
-export LW_GROUP="$USER"
+export LW_GROUP="$LW_USER"
 
 # Installation directory
-export LW_INSTALL_DIR="/opt/loopwhile/"
+export LW_INSTALL_DIR="/opt/loopwhile"
 
 # Log directory
 export LW_LOG_DIR="$LW_INSTALL_DIR/log"
 
 # Directory where temporary files of the execution are stored
-export LW_USER_SRC_DIR="/tmp/loopwhile_user_src/"
+export LW_USER_SRC_DIR="/tmp/loopwhile_user_src"
 
 # Directory where files that should be served by nginx are stored
-export LW_HTTPD_DIR="/var/www/html/"
+export LW_HTTPD_DIR="/var/www/html"
