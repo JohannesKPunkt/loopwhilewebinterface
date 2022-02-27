@@ -18,7 +18,7 @@ RUN mkdir -p /opt/loopwhile/logs
 RUN mkdir -p /tmp/loopwhile
 COPY . /tmp/loopwhile
 WORKDIR /tmp/loopwhile
-RUN /tmp/loopwhile/deliver.sh
+RUN /tmp/loopwhile/.deliver.sh DOCKER
 RUN rm -r /tmp/loopwhile
 WORKDIR /tmp
 
@@ -29,5 +29,5 @@ COPY config/nginx.example /etc/nginx/sites-available/default
 RUN mkdir -p /var/log/supervisor
 COPY config/supervisord.conf /etc/supervisor/conf.d/loopwhile.conf
 
-
-CMD ["/usr/bin/supervisord"]
+WORKDIR /opt/loopwhile/
+CMD ["./.run_supervisor.sh"]

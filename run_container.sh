@@ -4,7 +4,7 @@
 # The log files are placed locally in logs/.
 
 # Import settings
-source settings.sh
+source .settings.sh
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
@@ -14,4 +14,4 @@ LOG_DIR="$SCRIPT_DIR/logs"
 mkdir -p logs/loopwhile
 mkdir -p logs/nginx
 mkdir -p logs/supervisor
-sudo docker run --rm --name loopwhile -p 80:80 -v "$LOG_DIR/supervisor:/var/log/supervisor" -v "$LOG_DIR/nginx:/var/log/nginx" -v "$LOG_DIR/loopwhile:$LW_LOG_DIR" loopwhile
+sudo docker run -d --restart unless-stopped --name loopwhile -p 80:80 -v "$LOG_DIR/supervisor:/var/log/supervisor" -v "$LOG_DIR/nginx:/var/log/nginx" -v "$LOG_DIR/loopwhile:$LW_LOG_DIR" loopwhile

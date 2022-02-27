@@ -82,6 +82,13 @@
 
 \usepackage{float} %enables float option 'H' for figure etc.
 
+\usepackage{pifont,mdframed}
+\newenvironment{warning}
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=red]%
+    \begin{list}{}{\leftmargin=1cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
+
 \bibliographystyle{alpha}
 \begin{document}
 \pagestyle{plain}
@@ -90,6 +97,7 @@
 %\include{src/examples}
 \include{src/overview}
 \include{src/installation}
+\include{src/docker}
 \bibliography{literature}
 \end{document}
 

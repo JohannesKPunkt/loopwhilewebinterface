@@ -1,4 +1,9 @@
-\chapter{Installation and configuration}
+\chapter{Local Installation and configuration}
+\label{chapter:installation}
+\begin{warning}
+Recommendation: Instead of local installation, a Docker container should be used (see \autoref{chapter:docker}).
+\end{warning}
+
 \section{Requirements}
 We assume, that there is a Linux-based system (e.g. Ubuntu or Debian) with at least Python 3.5 installed. TurboGears and other prerequisites can
 be installed by the package-management system of Python (depending on your installation, you might need the command pip3 instead of pip for Python 3):
@@ -43,8 +48,6 @@ the respective backend to enable further request filtering there.
 The last step is to set up a daemon for the backend. An example configuration file for systemd is found in the
 repository under \verb|config/lw.service|. This file must be copied to \verb|/etc/systemd/system/lw.service|
 and the settings for \verb|User|, \verb|ExecStart| and \verb|WorkingDirectory| have to be adjusted.
-To configure the lw service itself, the URL for the WebSockets service in the \verb|--ws_hostname| option has to be
-adjusted in the run script (see section \ref{section:config}).
 The daemon can then be started by
 \begin{verbatim}
 sudo systemctl start lw
@@ -74,7 +77,6 @@ parameters can be set:
 \verb|--user_src=<PATH>|         & Path to the directory for temporary files\\
 \verb|--max_sessions=<LIMIT>|  & Maximal number of sessions, i.e. concurrent instances\\
                                                              & of the lwre binary\\
-\verb|--ws_hostname=<URL>|       & URL of the WebSockets service\\
 \verb|--ws_interface=<URL>|      & Address on which the WebSockets service listens on.\\
                                                              & It is strongly recommended to use 127.0.0.1 here.\\
 \verb|--ws_post=<URL>|           & Port the WebSockets service listens on\\

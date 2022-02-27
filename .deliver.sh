@@ -3,7 +3,10 @@
 set -e
 
 # Import settings
-source settings.sh
+source .settings.sh
+
+# Installation type (either "LOCAL" or "DOCKER")
+install_type="$1"
 
 echo "copy python sources"
 cp -r src/ "$LW_INSTALL_DIR/"
@@ -22,14 +25,18 @@ cp -r web/* $LW_HTTPD_DIR
 
 echo "create user source dir if not existent"
 mkdir -p $LW_USER_SRC_DIR
-chown $LW_USER:$LW_GROUP "$LW_USER_SRC_DIR"
+chown $LW_USER:$LW_GROUP "$LW_USER_SRC_DIR/"
 
 echo "create log dir if not existent"
 mkdir -p $LW_LOG_DIR
-chown $LW_USER:$LW_GROUP "$LW_LOG_DIR"
+chown $LW_USER:$LW_GROUP "$LW_LOG_DIR/"
 
 echo "copy binary and scripts"
 cp lwre "$LW_INSTALL_DIR/"
-cp settings.sh "$LW_INSTALL_DIR/"
+cp .settings.sh "$LW_INSTALL_DIR/"
 cp run.sh "$LW_INSTALL_DIR/"
 cp stop.sh "$LW_INSTALL_DIR/"
+if [ "$install_type" == "DOCKER" ]
+then
+    cp .run_supervisor.sh "$LW_INSTALL_DIR/"
+fi
