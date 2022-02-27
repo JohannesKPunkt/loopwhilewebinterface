@@ -29,3 +29,6 @@ export LW_USER_SRC_DIR="/tmp/loopwhile_user_src"
 
 # Directory where files that should be served by nginx are stored
 export LW_HTTPD_DIR="/var/www/html"
+
+# Name of the lw service
+export LW_SERVICENAME="lw"

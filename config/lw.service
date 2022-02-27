@@ -8,9 +8,9 @@ Type=simple
 Restart=always
 RestartSec=1
 User=loopwhile
-ExecStart=/INSTALLATION_PATH/run.sh
-ExecStop=/INSTALLATION_PATH/stop.sh
-WorkingDirectory=/INSTALLATION_PATH/
+ExecStart=INSTALLATION_PATH/run.sh
+ExecStop=INSTALLATION_PATH/stop.sh
+WorkingDirectory=INSTALLATION_PATH/
 
 [Install]
 WantedBy=multi-user.target
