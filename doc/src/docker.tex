@@ -9,15 +9,15 @@ The only requirement is an installation of Docker itself. Docker can be installe
 ubuntu and debian using the following command:
 
 \begin{verbatim}
-sudo apt-get install docker-io
+sudo apt-get install docker.io
 \end{verbatim}
 
 The application itself is then installed in three steps:
 \begin{itemize}
 \item Clone the git repository of the interactive interpreter to the machine
       on which the service shall run
-\item Run \verb|./build_container.sh| to build the container
-\item Run \verb|./run_container.sh| to start the container
+\item Run \verb|sudo ./build_container.sh| to build the container
+\item Run \verb|sudo ./run_container.sh| to start the container
 \end{itemize}
 The service is then listening on port 80. The container runs in background
 as a service and will start automatically after reboot.
