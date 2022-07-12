@@ -56,6 +56,16 @@ if __name__ == '__main__':
     with open("pid", "w") as pidfile:
         pidfile.write(str(pid))
 
+    # Create user source directory
+    try:
+        logger.info("Create user source directory {}".format(_user_src))
+        os.mkdir(_user_src)
+    except FileExistsError:
+        logger.info("{} already exists".format(_user_src))
+    except PermissionError as e:
+        logger.critical(e)
+        sys.exit(-1)
+
     # setup ReportGenerator
     ReportGenerator.setup(_report_file)
 
