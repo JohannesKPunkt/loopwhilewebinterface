@@ -49,11 +49,10 @@ cp config/nginx.example /etc/nginx/sites-available/default
 # Setup lw service
 cp config/lw.service "/etc/systemd/system/$LW_SERVICENAME.service"
 sed -i "s/INSTALLATION_PATH/$(escape_path $LW_INSTALL_DIR)/g" "/etc/systemd/system/$LW_SERVICENAME.service"
-if [ -n "$service_exists" ]
-then
-    # enable service, so that it will start automatically after reboot
-    systemctl enable "$LW_SERVICENAME"
-fi
+
+# enable service, so that it will start automatically after reboot
+echo "Enable lw service..."
+systemctl enable "$LW_SERVICENAME"
 
 # Start lw service
 echo "Start lw service..."
