@@ -32,3 +32,6 @@ export LW_HTTPD_DIR="/var/www/html"
 
 # Name of the lw service
 export LW_SERVICENAME="lw"
+
+# Name of the virtualenv
+export LW_VENV_NAME="venv"

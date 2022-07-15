@@ -39,4 +39,6 @@ cp stop.sh "$LW_INSTALL_DIR/"
 if [ "$install_type" == "DOCKER" ]
 then
     cp .run_supervisor.sh "$LW_INSTALL_DIR/"
+else
+    cp .setup_venv.sh "$LW_INSTALL_DIR/"
 fi

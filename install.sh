@@ -26,8 +26,7 @@ fi
 # Install dependencies
 echo "Install dependencies..."
 apt-get update
-apt-get install -y python3-pip
-pip3 install TurboGears2 genshi transaction waitress autobahn[twisted,accelerate]
+apt-get install -y virtualenv
 DEBIAN_FRONTEND="noninteractive" apt-get install -y nginx
 
 # Create user if not existant
@@ -42,6 +41,9 @@ mkdir -p "$LW_INSTALL_DIR/logs"
 
 # Install the application (seperate script)
 ./.deliver.sh LOCAL
+
+# Setup virtualenv
+"$LW_INSTALL_DIR/.setup_venv.sh"
 
 # Setup nginx
 cp config/nginx.example /etc/nginx/sites-available/default
